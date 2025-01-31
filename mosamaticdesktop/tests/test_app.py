@@ -1,3 +1,5 @@
-def test_first():
-    """An initial test for the app."""
-    assert 1 + 1 == 2
+from mosamaticdesktop.data import datamanager
+
+
+def test_datamanager():
+    assert datamanager.run()
