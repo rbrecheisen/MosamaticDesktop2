@@ -21,7 +21,10 @@ test_sources = [
 ]
 
 requires = [
+    "pendulum",
+    "sqlalchemy",
 ]
+
 test_requires = [
     "pytest",
 ]
