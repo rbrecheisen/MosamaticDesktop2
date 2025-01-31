@@ -1,5 +1,6 @@
-from mosamaticdesktop.data import datamanager
+from mosamaticdesktop.data.datamanager import DataManager
 
 
 def test_datamanager():
-    assert datamanager.run()
+    manager = DataManager()
+    manager.create_file('/Users/ralph/castorclientsecret.txt')

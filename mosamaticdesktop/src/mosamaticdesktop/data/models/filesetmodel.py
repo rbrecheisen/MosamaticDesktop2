@@ -12,4 +12,4 @@ class FileSetModel(BaseModel):
     id: Mapped[int] = Column('_id', String, primary_key=True, default=lambda: str(uuid.uuid4()), unique=True, nullable=False)
     name: Mapped[str] = Column('_name', String(256), nullable=False)
     path: Mapped[str] = Column('_path', String(1024), nullable=False)
-    fileModels: Mapped[List['FileModel']] = relationship('FileModel', back_populates='fileSetModel', cascade='all, delete-orphan')
+    file_models: Mapped[List['FileModel']] = relationship('FileModel', back_populates='fileset_model', cascade='all, delete-orphan')
