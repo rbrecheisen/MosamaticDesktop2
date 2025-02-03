@@ -2,7 +2,7 @@ import os
 
 
 class Task:
-    def __init__(self, input_dir: str, output_dir: str) -> None:
+    def __init__(self, input_dir, output_dir):
         self.input_dir = input_dir
         self.output_dir = output_dir
         os.makedirs(self.output_dir, exist_ok=True)

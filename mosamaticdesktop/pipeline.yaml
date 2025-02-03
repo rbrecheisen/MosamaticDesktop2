@@ -1,0 +1,3 @@
+steps:
+  - task: CopyFilesTask
+  - task: CopyFilesTask
