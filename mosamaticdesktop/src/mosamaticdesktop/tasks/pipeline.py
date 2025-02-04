@@ -4,5 +4,6 @@ class Pipeline:
 
     def run(self):
         for task in self.tasks:
-            task.start()
-            task.join()
+            # task.start()
+            task.run()
+            # task.join()

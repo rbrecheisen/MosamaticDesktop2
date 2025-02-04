@@ -1,12 +1,9 @@
 import os
 import uuid
-import pathlib
-import multiprocessing
 
 
-class Task(multiprocessing.Process):
+class Task:
     def __init__(self, input_dir, output_dir, params=None):
-        super(Task, self).__init__()
         self.task_id = str(uuid.uuid4())
         self.params = params
         self.input_dir = input_dir
