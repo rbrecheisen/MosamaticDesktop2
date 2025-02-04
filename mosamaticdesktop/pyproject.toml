@@ -11,7 +11,12 @@ author_email = "ralph.brecheisen@gmail.com"
 [tool.briefcase.app.mosamaticdesktop]
 formal_name = "Mosamatic Desktop 2.0"
 description = "Tool for CT-based body composition analysis"
-long_description = """"""
+long_description = """
+Mosamatic Desktop 2.0 is a tool for body composition analysis of CT images. It can be
+started in two modes: graphical and background. The graphical mode is based on Toga while
+the background mode is executed using Flask. 
+"""
+
 sources = [
     "src/mosamaticdesktop",
 ]
@@ -24,6 +29,7 @@ requires = [
     "sqlalchemy",
     "pytest",
     "pyyaml",
+    "flask",
 ]
 
 test_requires = [

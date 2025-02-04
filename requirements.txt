@@ -2,3 +2,5 @@ briefcase
 pendulum
 sqlalchemy
 pytest
+flask
+toga
