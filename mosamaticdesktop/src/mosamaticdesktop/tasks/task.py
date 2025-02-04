@@ -11,7 +11,7 @@ class Task:
         os.makedirs(self.output_dir, exist_ok=True)
 
     def execute(self):
-        raise NotImplementedError('Subclasses must implement "run()"')
+        raise NotImplementedError('Subclasses must implement "execute()"')
 
     def run(self):
         if not os.path.exists(self.input_dir):

@@ -41,7 +41,6 @@ class MosamaticDesktop(toga.App):
             'D:\\Mosamatic\\Mosamatic Desktop 2.0\\copyfilestask1',
             params={'delay': 1},
         )
-        # self.task.start()
         self.task.run()
         print('Task completed')
 

@@ -14,5 +14,4 @@ class CopyFilesTask(Task):
             if self.params:
                 if 'delay' in self.params.keys():
                     delay = int(self.params['delay'])
-                    print(f'Waiting {delay} seconds before next step...')
                     time.sleep(delay)
