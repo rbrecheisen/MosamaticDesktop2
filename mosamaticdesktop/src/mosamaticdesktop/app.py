@@ -18,7 +18,7 @@ class MosamaticDesktop(toga.App):
             ),
             CopyFilesTask(
                 'D:\\Mosamatic\\Mosamatic Desktop 2.0\\copyfilestask1', 
-                'D:\\Mosamatic\\Mosamatic Desktop 2.0\\copyfilestask2'
+                'D:\\Mosamatic\\Mosamatic Desktop 2.0\\copyfilestask2',
             ),
         ])
 
@@ -26,13 +26,11 @@ class MosamaticDesktop(toga.App):
         button1 = toga.Button('Run task', on_press=self.run_task, style=Pack(padding=10))
         button2 = toga.Button('Run pipeline', on_press=self.run_pipeline, style=Pack(padding=10))
         button3 = toga.Button('Cancel task', on_press=self.cancel_task, style=Pack(padding=10))
-        button4 = toga.Button('Cancel pipeline', on_press=self.cancel_pipeline, style=Pack(padding=10))
 
         main_box = toga.Box()
         main_box.add(button1)
         main_box.add(button2)
         main_box.add(button3)
-        main_box.add(button4)
 
         self.main_window = toga.MainWindow(title=self.formal_name)
         self.main_window.content = main_box
@@ -59,11 +57,6 @@ class MosamaticDesktop(toga.App):
         print('Running pipeline...')
         self.pipeline.run()
         print('Pipeline finished')
-
-    def cancel_pipeline(self, widget):
-        print('Canceling pipeline...')
-        self.pipeline.cancel_current_task()
-        print('Pipeline canceled')
 
 
 
