@@ -22,8 +22,6 @@ def run_tests():
             "-vv",
             # Disable color
             "--color=no",
-            # Do not capture stdout/stderr
-            "-s",
             # Overwrite the cache directory to somewhere writable
             "-o",
             f"cache_dir={tempfile.gettempdir()}/.pytest_cache",
