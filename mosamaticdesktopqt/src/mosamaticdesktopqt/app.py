@@ -6,7 +6,7 @@ import sys
 import time
 import importlib.metadata
 
-from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout
+from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget
 from PySide6.QtCore import QThread, Signal
 
 
@@ -18,8 +18,7 @@ class Task(QThread):
             if self.isInterruptionRequested():
                 return
             time.sleep(1)
-            self.progress.emit(i * 20)
-        print('Task completed')
+            self.progress.emit((i+1) * 20)
 
 
 class MosamaticDesktopQt20(QMainWindow):
@@ -30,13 +29,13 @@ class MosamaticDesktopQt20(QMainWindow):
 
     def init_ui(self):
         self.setWindowTitle("Mosamatic Desktop Qt 2.0")
-        
-        self.button1 = QPushButton('Run task', self)
-        self.button1.clicked.connect(self.start_task)
-
+        widget = QWidget()
+        self.setCentralWidget(widget)
+        button1 = QPushButton('Run task', self)
+        button1.clicked.connect(self.start_task)
         layout = QVBoxLayout()
-        layout.addWidget(self.button1)
-        self.setLayout(layout)
+        layout.addWidget(button1)
+        widget.setLayout(layout)
 
     def start_task(self):
         if self.thread is None or not self.thread.isRunning():
