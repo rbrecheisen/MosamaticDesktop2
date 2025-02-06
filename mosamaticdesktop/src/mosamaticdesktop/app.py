@@ -4,7 +4,6 @@ import importlib.metadata
 from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget
 
 from mosamaticdesktop.tasks.task import Task
-from mosamaticdesktop.tasks.copyfilestask import CopyFilesTask
 from mosamaticdesktop.pipeline import Pipeline
 
 
@@ -12,17 +11,7 @@ class MosamaticDesktopQt20(QMainWindow):
     def __init__(self):
         super().__init__()
         self._task = None
-        self._pipeline = Pipeline([
-            CopyFilesTask(
-                input_dir='D:\\Mosamatic\\Mosamatic Desktop 2.0\\input',
-                output_dir='D:\\Mosamatic\\Mosamatic Desktop 2.0\\copyfilestask1',
-                params={'delay': 1},
-            ),
-            CopyFilesTask(
-                input_dir='D:\\Mosamatic\\Mosamatic Desktop 2.0\\copyfilestask1',
-                output_dir='D:\\Mosamatic\\Mosamatic Desktop 2.0\\copyfilestask2',
-            )
-        ])
+        self._pipeline = Pipeline('D:\\SoftwareDevelopment\\GitHub\MosamaticDesktop2.0\\pipeline.yaml')
         self.init_ui()
 
     def init_ui(self):
