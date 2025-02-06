@@ -23,7 +23,7 @@ class Task(QThread):
         self._running = True
 
     def execute(self, params):
-        print(f'WARNING: execute() should be reimplemented in the child class. This is just a demo execution.')
+        print('WARNING: execute() should be reimplemented in the child class. This is just a demo execution.')
         for i in range(5):
             if not self._running:
                 self.set_status(TaskStatus.CANCELED)
