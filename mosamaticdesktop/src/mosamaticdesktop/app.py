@@ -15,7 +15,7 @@ class MosamaticDesktopQt20(QMainWindow):
         self.init_ui()
 
     def init_ui(self):
-        self.setWindowTitle("Mosamatic Desktop Qt 2.0")
+        self.setWindowTitle("Mosamatic Desktop 2.0")
         widget = QWidget()
         self.setCentralWidget(widget)
         button1 = QPushButton('Run task', self)
