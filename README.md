@@ -2,9 +2,7 @@
 Desktop version of Mosamatic
 
 ## Building project
-- briefcase new
-- briefcase create
+- briefcase create (if new packages added to .toml)
+- briefcase update
 - briefcase build
-- briefcase run (--test)
-
-## Class design
+- briefcase run

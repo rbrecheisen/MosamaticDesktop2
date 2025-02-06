@@ -11,8 +11,8 @@ author_email = "ralph.brecheisen@gmail.com"
 [tool.briefcase.app.mosamaticdesktop]
 formal_name = "Mosamatic Desktop 2.0"
 description = "Tool for body composition analysis of CT images"
-long_description = """More details about the app should go here.
-"""
+long_description = """"""
+
 sources = [
     "src/mosamaticdesktop",
 ]
@@ -23,6 +23,7 @@ test_sources = [
 requires = [
     "PySide6-Essentials~=6.7",
     # "PySide6-Addons~=6.7",
+    "pyyaml",
 ]
 test_requires = [
     "pytest",
