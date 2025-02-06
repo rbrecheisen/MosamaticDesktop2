@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtGui import QGuiApplication
 
 from mosamaticdesktop.tasks.task import Task
+from mosamaticdesktop.tasks.registry import TaskRegistry
 from mosamaticdesktop.pipeline import Pipeline
 
 
@@ -18,9 +19,13 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self._task = None
+        self._task_params = None
+        self._pipeline = None
         self._directory_combo = None 
         self._tasks_combo = None
-        self._pipeline = Pipeline('D:\\SoftwareDevelopment\\GitHub\MosamaticDesktop2.0\\pipeline.yaml')
+        self._input_group = None
+        self._tasks_group = None
+        self._pipeline_group = None
         self._pipeline_config_label = None
         self.init_ui()
 
@@ -28,8 +33,19 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Mosamatic Desktop 2.0")
         widget = QWidget()
         self.setCentralWidget(widget)
+        self.init_input_group()
+        self.init_tasks_group()
+        self.init_pipeline_group()
+        layout = QVBoxLayout()
+        layout.addWidget(self._input_group)
+        layout.addWidget(self._tasks_group)
+        layout.addWidget(self._pipeline_group)
+        widget.setLayout(layout)
+        self.center_window()
+        self.resize(400, 300)
 
-        input_group = QGroupBox('Input')
+    def init_input_group(self):
+        self._input_group = QGroupBox('Input')
         select_dir_button = QPushButton('Select input directory:', self)
         select_dir_button.clicked.connect(self.select_directory)
         self._directory_combo = QComboBox()
@@ -37,10 +53,13 @@ class MainWindow(QMainWindow):
         input_group_layout = QVBoxLayout()
         input_group_layout.addWidget(select_dir_button)
         input_group_layout.addWidget(self._directory_combo)
-        input_group.setLayout(input_group_layout)
+        self._input_group.setLayout(input_group_layout)
 
-        tasks_group = QGroupBox('Tasks')
+    def init_tasks_group(self):
+        self._tasks_group = QGroupBox('Tasks')
         self._tasks_combo = QComboBox()
+        task_names = [entry.value[0].__name__ for entry in TaskRegistry]
+        self._tasks_combo.addItems(task_names)
         self._tasks_combo.setEditable(False)
         task_params_button = QPushButton('Set task parameters', self)
         task_params_button.clicked.connect(self.set_task_params)
@@ -50,9 +69,10 @@ class MainWindow(QMainWindow):
         tasks_group_layout.addWidget(self._tasks_combo)
         tasks_group_layout.addWidget(task_params_button)
         tasks_group_layout.addWidget(task_run_button)
-        tasks_group.setLayout(tasks_group_layout)
+        self._tasks_group.setLayout(tasks_group_layout)
 
-        pipeline_group = QGroupBox('Pipeline')
+    def init_pipeline_group(self):
+        self._pipeline_group = QGroupBox('Pipeline')
         load_pipeline_config_button = QPushButton('Load pipeline config', self)
         load_pipeline_config_button.clicked.connect(self.load_pipeline_config)
         self._pipeline_config_label = QLabel('No config file selected')
@@ -62,16 +82,7 @@ class MainWindow(QMainWindow):
         pipeline_group_layout.addWidget(load_pipeline_config_button)
         pipeline_group_layout.addWidget(self._pipeline_config_label)
         pipeline_group_layout.addWidget(run_pipeline_button)
-        pipeline_group.setLayout(pipeline_group_layout)
-
-        layout = QVBoxLayout()
-        layout.addWidget(input_group)
-        layout.addWidget(tasks_group)
-        layout.addWidget(pipeline_group)
-        widget.setLayout(layout)
-
-        self.center_window()
-        self.resize(400, 300)
+        self._pipeline_group.setLayout(pipeline_group_layout)
 
     def select_directory(self):
         directory = QFileDialog.getExistingDirectory(self, 'Select directory')
