@@ -1,3 +1,4 @@
+import os
 import time
 
 from enum import Enum
@@ -16,16 +17,17 @@ class Task(QThread):
     progress = Signal(int)
     status = Signal(str)
 
-    def __init__(self, params=None, parent=None):
-        super(Task, self).__init__(parent)
+    def __init__(self, input_dir, output_dir, params=None):
+        super(Task, self).__init__()
+        self._input_dir = input_dir
+        self._output_dir = output_dir
         self._params = params
-        self._status = TaskStatus.IDLE
-        self._running = True
+        self._canceled = False
+        os.makedirs(output_dir, exist_ok=True)
 
-    def execute(self, params):
-        print('WARNING: execute() should be reimplemented in the child class. This is just a demo execution.')
+    def execute(self):
         for i in range(5):
-            if not self._running:
+            if self._canceled:
                 self.set_status(TaskStatus.CANCELED)
                 return 
             time.sleep(1)
@@ -34,17 +36,20 @@ class Task(QThread):
     def run(self):
         self.set_status(TaskStatus.RUNNING)
         try:
-            self.execute(self._params)
-            if self._running:
+            self.execute()
+            if not self._canceled:
                 self.set_status(TaskStatus.COMPLETED)
         except Exception as e:
+            print(f'ERROR: Task failed ({e})')
             self.set_status(TaskStatus.FAILED)
 
     def cancel(self):
-        self._running = False
+        self._canceled = True
 
     def set_progress(self, progress):
+        print(f'Progress task {self.__class__.__name__}: {progress}')
         self.progress.emit(progress)
 
     def set_status(self, status):
+        print(f'Status task {self.__class__.__name__}: {status.value}')
         self.status.emit(status.value)

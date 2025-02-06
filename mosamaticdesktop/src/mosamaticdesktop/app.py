@@ -3,13 +3,26 @@ import importlib.metadata
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget
 
-from mosamaticdesktop.tasks.task import Task, TaskStatus
+from mosamaticdesktop.tasks.task import Task
+from mosamaticdesktop.tasks.copyfilestask import CopyFilesTask
+from mosamaticdesktop.pipeline import Pipeline
 
 
 class MosamaticDesktopQt20(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.thread = None
+        self._task = None
+        self._pipeline = Pipeline([
+            CopyFilesTask(
+                input_dir='D:\\Mosamatic\\Mosamatic Desktop 2.0\\input',
+                output_dir='D:\\Mosamatic\\Mosamatic Desktop 2.0\\copyfilestask1',
+                params={'delay': 1},
+            ),
+            CopyFilesTask(
+                input_dir='D:\\Mosamatic\\Mosamatic Desktop 2.0\\copyfilestask1',
+                output_dir='D:\\Mosamatic\\Mosamatic Desktop 2.0\\copyfilestask2',
+            )
+        ])
         self.init_ui()
 
     def init_ui(self):
@@ -18,29 +31,38 @@ class MosamaticDesktopQt20(QMainWindow):
         self.setCentralWidget(widget)
         button1 = QPushButton('Run task', self)
         button1.clicked.connect(self.start_task)
-        button2 = QPushButton('Cancel', self)
+        button2 = QPushButton('Cancel task', self)
         button2.clicked.connect(self.cancel_task)
+        button3 = QPushButton('Run pipeline', self)
+        button3.clicked.connect(self.run_pipeline)
         layout = QVBoxLayout()
         layout.addWidget(button1)
         layout.addWidget(button2)
+        layout.addWidget(button3)
         widget.setLayout(layout)
 
     def start_task(self):
-        if self.thread is None or not self.thread.isRunning():
-            self.thread = Task()
-            self.thread.progress.connect(self.update_ui)
-            self.thread.status.connect(self.update_status)
-            self.thread.start()
+        if self._task is None or not self._task.isRunning():
+            self._task = Task(
+                input_dir='D:\\Mosamatic\\Mosamatic Desktop 2.0\\input',
+                output_dir='D:\\Mosamatic\\Mosamatic Desktop 2.0\\copyfilestask1',
+            )
+            self._task.progress.connect(self.update_ui)
+            self._task.status.connect(self.update_status)
+            self._task.start()
 
     def cancel_task(self):
-        if self.thread is not None:
-            self.thread.cancel()
+        if self._task is not None:
+            self._task.cancel()
+
+    def run_pipeline(self):
+        self._pipeline.run()
 
     def update_ui(self, progress):
-        print(f'Progress: {progress}')
+        pass
 
     def update_status(self, status):
-        print(f'Status: {status}')
+        pass
 
 
 def main():
