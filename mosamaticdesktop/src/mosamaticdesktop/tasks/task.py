@@ -16,23 +16,25 @@ class Task(QThread):
     progress = Signal(int)
     status = Signal(str)
 
-    def __init__(self, parent=None):
+    def __init__(self, params=None, parent=None):
         super(Task, self).__init__(parent)
+        self._params = params
         self._status = TaskStatus.IDLE
         self._running = True
 
-    def execute(self):
+    def execute(self, params):
+        print(f'WARNING: execute() should be reimplemented in the child class. This is just a demo execution.')
         for i in range(5):
             if not self._running:
                 self.set_status(TaskStatus.CANCELED)
                 return 
-            self.set_progress((i+1) * 20)
             time.sleep(1)
+            self.set_progress((i+1) * 20)
 
     def run(self):
         self.set_status(TaskStatus.RUNNING)
         try:
-            self.execute()
+            self.execute(self._params)
             if self._running:
                 self.set_status(TaskStatus.COMPLETED)
         except Exception as e:

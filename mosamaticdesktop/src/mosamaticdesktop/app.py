@@ -3,7 +3,7 @@ import importlib.metadata
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget
 
-from mosamaticdesktop.tasks.task import Task
+from mosamaticdesktop.tasks.task import Task, TaskStatus
 
 
 class MosamaticDesktopQt20(QMainWindow):
