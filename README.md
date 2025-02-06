@@ -6,3 +6,5 @@ Desktop version of Mosamatic
 - briefcase create
 - briefcase build
 - briefcase run (--test)
+
+## Class design

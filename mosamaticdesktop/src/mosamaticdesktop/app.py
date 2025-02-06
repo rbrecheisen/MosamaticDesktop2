@@ -1,24 +1,9 @@
-"""
-My first application
-"""
-
 import sys
-import time
 import importlib.metadata
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget
-from PySide6.QtCore import QThread, Signal
 
-
-class Task(QThread):
-    progress = Signal(int)
-
-    def run(self):
-        for i in range(5):
-            if self.isInterruptionRequested():
-                return
-            time.sleep(1)
-            self.progress.emit((i+1) * 20)
+from mosamaticdesktop.tasks.task import Task
 
 
 class MosamaticDesktopQt20(QMainWindow):
@@ -33,18 +18,29 @@ class MosamaticDesktopQt20(QMainWindow):
         self.setCentralWidget(widget)
         button1 = QPushButton('Run task', self)
         button1.clicked.connect(self.start_task)
+        button2 = QPushButton('Cancel', self)
+        button2.clicked.connect(self.cancel_task)
         layout = QVBoxLayout()
         layout.addWidget(button1)
+        layout.addWidget(button2)
         widget.setLayout(layout)
 
     def start_task(self):
         if self.thread is None or not self.thread.isRunning():
             self.thread = Task()
             self.thread.progress.connect(self.update_ui)
+            self.thread.status.connect(self.update_status)
             self.thread.start()
+
+    def cancel_task(self):
+        if self.thread is not None:
+            self.thread.cancel()
 
     def update_ui(self, progress):
         print(f'Progress: {progress}')
+
+    def update_status(self, status):
+        print(f'Status: {status}')
 
 
 def main():
