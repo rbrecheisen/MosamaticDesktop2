@@ -7,7 +7,7 @@ class Pipeline:
         self._tasks = self.load_tasks_from_config(config_file)
 
     def load_tasks_from_config(self, config_file):
-
+        
         # Load YAML file
         with open(config_file, 'r') as f:
             config = yaml.safe_load(f)
