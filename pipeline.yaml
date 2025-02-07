@@ -1,3 +1,13 @@
+# Example pipeline config
+#
+# Usage:
+# - class: <task class name>
+#   input_dir: <task input directory>
+#   output_dir: <task output directory> (will be created if not existing)
+#   params:
+#     <name 1>: <value>
+#     <name 2>: <value>
+
 tasks:
 
   - class: CopyFilesTask
@@ -9,3 +19,4 @@ tasks:
     input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\copyfilestask1"
     output_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\copyfilestask2"
     params:
+      delay: 1

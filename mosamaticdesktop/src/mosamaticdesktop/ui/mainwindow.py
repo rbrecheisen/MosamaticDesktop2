@@ -10,14 +10,19 @@ from PySide6.QtWidgets import (
     QFileDialog, 
     QComboBox,
     QLabel,
+    QDialog,
+    QMessageBox,
+    QProgressBar,
 )
 from PySide6.QtGui import QGuiApplication, QIcon
 
 from mosamaticdesktop.tasks.task import Task
-from mosamaticdesktop.tasks.registry import TaskRegistry
+from mosamaticdesktop.tasks.registry import TASK_REGISTRY
 from mosamaticdesktop.tasks.pipeline import Pipeline
+from mosamaticdesktop.tasks.copyfilestaskdialog import CopyFilesTaskDialog
 
-RESOURCES_DIR = str(Path(__file__).resolve().parent.parent / 'resources')
+BASE_DIR = str(Path(__file__).resolve().parent.parent)
+RESOURCES_DIR = os.path.join(BASE_DIR, 'resources')
 
 
 class MainWindow(QMainWindow):
@@ -32,6 +37,7 @@ class MainWindow(QMainWindow):
         self._tasks_group = None
         self._pipeline_group = None
         self._pipeline_config_label = None
+        self._progress_bar = None
         self.init_ui()
 
     def init_ui(self):
@@ -53,7 +59,7 @@ class MainWindow(QMainWindow):
     def init_input_group(self):
         self._input_group = QGroupBox('Input')
         select_dir_button = QPushButton('Select input directory:', self)
-        select_dir_button.clicked.connect(self.select_directory)
+        select_dir_button.clicked.connect(self.select_input_directory)
         self._directory_combo = QComboBox()
         self._directory_combo.setEditable(True)
         input_group_layout = QVBoxLayout()
@@ -64,17 +70,18 @@ class MainWindow(QMainWindow):
     def init_tasks_group(self):
         self._tasks_group = QGroupBox('Tasks')
         self._tasks_combo = QComboBox()
-        task_names = [entry.value[0].__name__ for entry in TaskRegistry]
-        self._tasks_combo.addItems(task_names)
+        self._tasks_combo.addItems(TASK_REGISTRY.keys())
         self._tasks_combo.setEditable(False)
         task_params_button = QPushButton('Set task parameters', self)
         task_params_button.clicked.connect(self.set_task_params)
         task_run_button = QPushButton('Run task', self)
         task_run_button.clicked.connect(self.run_task)
+        self._progress_bar = QProgressBar(self, minimum=0, maximum=100)
         tasks_group_layout = QVBoxLayout()
         tasks_group_layout.addWidget(self._tasks_combo)
         tasks_group_layout.addWidget(task_params_button)
         tasks_group_layout.addWidget(task_run_button)
+        tasks_group_layout.addWidget(self._progress_bar)
         self._tasks_group.setLayout(tasks_group_layout)
 
     def init_pipeline_group(self):
@@ -90,8 +97,8 @@ class MainWindow(QMainWindow):
         pipeline_group_layout.addWidget(run_pipeline_button)
         self._pipeline_group.setLayout(pipeline_group_layout)
 
-    def select_directory(self):
-        directory = QFileDialog.getExistingDirectory(self, 'Select directory')
+    def select_input_directory(self):
+        directory = QFileDialog.getExistingDirectory(self, 'Select directory', dir=BASE_DIR)
         if directory and directory not in [self._directory_combo.itemText(i) for i in range(self._directory_combo.count())]:
             self._directory_combo.addItem(directory)
             self._directory_combo.setCurrentText(directory)
@@ -99,42 +106,47 @@ class MainWindow(QMainWindow):
             pass
 
     def set_task_params(self):
-        pass
+        self._task_params = None
+        dialog = CopyFilesTaskDialog(self)
+        if dialog.exec() == QDialog.Accepted:
+            self._task_params = dialog.get_params()
+            print(f'Task parameters set: {self._task_params}')
+        else:
+            print('No task parameters set')
 
     def run_task(self):
-        pass
+        input_dir = self._directory_combo.currentText()
+        if input_dir and input_dir != '':
+            self._task = None
+            if self._task_params is not None:
+                self._progress_bar.setValue(0)
+                task_name = self._tasks_combo.currentText()
+                self._task = TASK_REGISTRY[task_name][0](self._directory_combo.currentText(), self._task_params)
+                self._task.progress.connect(self.update_ui)
+                self._task.status.connect(self.update_status)
+                self._task.start()
+            else:
+                QMessageBox.warning(self, 'Task run', 'No task parameters set')
+        else:
+            QMessageBox.warning(self, 'Input directory', 'No input directory selected')
 
     def load_pipeline_config(self):
-        file_path, _ = QFileDialog.getOpenFileName(self, 'Open pipeline config')
+        file_path, _ = QFileDialog.getOpenFileName(self, 'Open pipeline config', dir=BASE_DIR)
         if file_path and file_path.endswith('.yaml'):
             self._pipeline = Pipeline(file_path)
             self._pipeline_config_label.setText(file_path)
         else:
             self._pipeline_config_label.setText('No config file selected')
 
-    def start_task(self):
-        if self._task is None or not self._task.isRunning():
-            self._task = Task(
-                input_dir='D:\\Mosamatic\\Mosamatic Desktop 2.0\\input',
-                output_dir='D:\\Mosamatic\\Mosamatic Desktop 2.0\\copyfilestask1',
-            )
-            self._task.progress.connect(self.update_ui)
-            self._task.status.connect(self.update_status)
-            self._task.start()
-
-    def cancel_task(self):
-        if self._task is not None:
-            self._task.cancel()
-
     def run_pipeline(self):
         if self._pipeline:
             self._pipeline.run()
 
     def update_ui(self, progress):
-        pass
+        self._progress_bar.setValue(progress)
 
     def update_status(self, status):
-        pass
+        print(f'MainWindow status: {status}')
 
     def center_window(self):
         screen = QGuiApplication.primaryScreen().geometry()
