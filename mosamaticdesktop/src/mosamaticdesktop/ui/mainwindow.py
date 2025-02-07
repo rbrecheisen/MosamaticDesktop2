@@ -33,6 +33,9 @@ class MainWindow(QMainWindow):
         self._pipeline = None
         self._directory_combo = None 
         self._tasks_combo = None
+        self._task_run_button = None
+        self._task_cancel_button = None
+        self._task_params_button = None
         self._input_group = None
         self._tasks_group = None
         self._pipeline_group = None
@@ -79,16 +82,21 @@ class MainWindow(QMainWindow):
         self._tasks_combo = QComboBox()
         self._tasks_combo.addItems(TASK_REGISTRY.keys())
         self._tasks_combo.setEditable(False)
-        task_params_button = QPushButton('Set task parameters', self)
-        task_params_button.clicked.connect(self.set_task_params)
-        task_run_button = QPushButton('Run task', self)
-        task_run_button.clicked.connect(self.run_task)
+        self._task_params_button = QPushButton('Set task parameters', self)
+        self._task_params_button.clicked.connect(self.set_task_params)
+        self._task_run_button = QPushButton('Run task', self)
+        self._task_run_button.clicked.connect(self.run_task)
+        self._task_run_button.setEnabled(False)
+        self._task_cancel_button = QPushButton('Cancel task', self)
+        self._task_cancel_button.clicked.connect(self.cancel_task)
+        self._task_cancel_button.setEnabled(False)
         self._progress_bar = QProgressBar(self, minimum=0, maximum=100)
         self._task_status = QLabel('Status: idle')
         tasks_group_layout = QVBoxLayout()
         tasks_group_layout.addWidget(self._tasks_combo)
-        tasks_group_layout.addWidget(task_params_button)
-        tasks_group_layout.addWidget(task_run_button)
+        tasks_group_layout.addWidget(self._task_params_button)
+        tasks_group_layout.addWidget(self._task_run_button)
+        tasks_group_layout.addWidget(self._task_cancel_button)
         tasks_group_layout.addWidget(self._progress_bar)
         tasks_group_layout.addWidget(self._task_status)
         self._tasks_group.setLayout(tasks_group_layout)
@@ -119,9 +127,10 @@ class MainWindow(QMainWindow):
         dialog = CopyFilesTaskDialog(self)
         if dialog.exec() == QDialog.Accepted:
             self._task_params = dialog.get_params()
-            print(f'Task parameters set: {self._task_params}')
+            self._task_run_button.setEnabled(True)
         else:
             print('No task parameters set')
+            self._task_run_button.setEnabled(False)
 
     def run_task(self):
         input_dir = self._directory_combo.currentText()
@@ -129,6 +138,8 @@ class MainWindow(QMainWindow):
             self._task = None
             if self._task_params is not None:
                 self._progress_bar.setValue(0)
+                self._task_params_button.setEnabled(False)
+                self._task_cancel_button.setEnabled(True)
                 task_name = self._tasks_combo.currentText()
                 self._task = TASK_REGISTRY[task_name][0](
                     input_dir=self._directory_combo.currentText(), 
@@ -141,6 +152,10 @@ class MainWindow(QMainWindow):
                 QMessageBox.warning(self, 'Task run', 'No task parameters set')
         else:
             QMessageBox.warning(self, 'Input directory', 'No input directory selected')
+
+    def cancel_task(self):
+        if self._task is not None:
+            self._task.cancel()
 
     def load_pipeline_config(self):
         file_path, _ = QFileDialog.getOpenFileName(self, 'Open pipeline config', dir=BASE_DIR)
@@ -159,6 +174,10 @@ class MainWindow(QMainWindow):
 
     def update_status(self, status):
         self._task_status.setText(f'Status: {status}')
+        if status == 'completed' or status == 'failed' or status == 'canceled':
+            self._task_run_button.setEnabled(False)
+            self._task_cancel_button.setEnabled(False)          
+            self._task_params_button.setEnabled(True)  
 
     def center_window(self):
         screen = QGuiApplication.primaryScreen().geometry()
