@@ -38,6 +38,7 @@ class MainWindow(QMainWindow):
         self._pipeline_group = None
         self._pipeline_config_label = None
         self._progress_bar = None
+        self._task_status = None
         self.init_ui()
 
     def init_ui(self):
@@ -83,11 +84,13 @@ class MainWindow(QMainWindow):
         task_run_button = QPushButton('Run task', self)
         task_run_button.clicked.connect(self.run_task)
         self._progress_bar = QProgressBar(self, minimum=0, maximum=100)
+        self._task_status = QLabel('Status: idle')
         tasks_group_layout = QVBoxLayout()
         tasks_group_layout.addWidget(self._tasks_combo)
         tasks_group_layout.addWidget(task_params_button)
         tasks_group_layout.addWidget(task_run_button)
         tasks_group_layout.addWidget(self._progress_bar)
+        tasks_group_layout.addWidget(self._task_status)
         self._tasks_group.setLayout(tasks_group_layout)
 
     def init_pipeline_group(self):
@@ -155,7 +158,7 @@ class MainWindow(QMainWindow):
         self._progress_bar.setValue(progress)
 
     def update_status(self, status):
-        print(f'MainWindow status: {status}')
+        self._task_status.setText(f'Status: {status}')
 
     def center_window(self):
         screen = QGuiApplication.primaryScreen().geometry()
