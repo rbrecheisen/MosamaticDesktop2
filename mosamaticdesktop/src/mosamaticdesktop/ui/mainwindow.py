@@ -1,3 +1,6 @@
+import os
+
+from pathlib import Path
 from PySide6.QtWidgets import (
     QMainWindow, 
     QPushButton, 
@@ -8,11 +11,13 @@ from PySide6.QtWidgets import (
     QComboBox,
     QLabel,
 )
-from PySide6.QtGui import QGuiApplication
+from PySide6.QtGui import QGuiApplication, QIcon
 
 from mosamaticdesktop.tasks.task import Task
 from mosamaticdesktop.tasks.registry import TaskRegistry
 from mosamaticdesktop.tasks.pipeline import Pipeline
+
+RESOURCES_DIR = str(Path(__file__).resolve().parent.parent / 'resources')
 
 
 class MainWindow(QMainWindow):
@@ -30,7 +35,8 @@ class MainWindow(QMainWindow):
         self.init_ui()
 
     def init_ui(self):
-        self.setWindowTitle("Mosamatic Desktop 2.0")
+        self.setWindowTitle('Mosamatic Desktop 2.0')
+        self.setWindowIcon(QIcon(os.path.join(RESOURCES_DIR, 'letter-m.png')))
         widget = QWidget()
         self.setCentralWidget(widget)
         self.init_input_group()
