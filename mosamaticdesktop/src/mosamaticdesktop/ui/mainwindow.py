@@ -12,7 +12,7 @@ from PySide6.QtGui import QGuiApplication
 
 from mosamaticdesktop.tasks.task import Task
 from mosamaticdesktop.tasks.registry import TaskRegistry
-from mosamaticdesktop.pipeline import Pipeline
+from mosamaticdesktop.tasks.pipeline import Pipeline
 
 
 class MainWindow(QMainWindow):
