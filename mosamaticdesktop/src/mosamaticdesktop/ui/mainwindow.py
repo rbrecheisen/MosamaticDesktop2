@@ -15,8 +15,8 @@ from PySide6.QtWidgets import (
     QProgressBar,
 )
 from PySide6.QtGui import QGuiApplication, QIcon
+from PySide6.QtCore import QOperatingSystemVersion
 
-from mosamaticdesktop.tasks.task import Task
 from mosamaticdesktop.tasks.registry import TASK_REGISTRY
 from mosamaticdesktop.tasks.pipeline import Pipeline
 from mosamaticdesktop.tasks.copyfilestaskdialog import CopyFilesTaskDialog
@@ -62,6 +62,12 @@ class MainWindow(QMainWindow):
         select_dir_button.clicked.connect(self.select_input_directory)
         self._directory_combo = QComboBox()
         self._directory_combo.setEditable(True)
+        #### Hack for quick testing
+        if QOperatingSystemVersion.current() >= QOperatingSystemVersion(QOperatingSystemVersion.Windows10):
+            self._directory_combo.addItem('D:\\Mosamatic\\Mosamatic Desktop 2.0\\input')
+        else:
+            self._directory_combo.addItem('/Users/ralph/input')
+        ####
         input_group_layout = QVBoxLayout()
         input_group_layout.addWidget(select_dir_button)
         input_group_layout.addWidget(self._directory_combo)
@@ -121,7 +127,10 @@ class MainWindow(QMainWindow):
             if self._task_params is not None:
                 self._progress_bar.setValue(0)
                 task_name = self._tasks_combo.currentText()
-                self._task = TASK_REGISTRY[task_name][0](self._directory_combo.currentText(), self._task_params)
+                self._task = TASK_REGISTRY[task_name][0](
+                    input_dir=self._directory_combo.currentText(), 
+                    params=self._task_params
+                )
                 self._task.progress.connect(self.update_ui)
                 self._task.status.connect(self.update_status)
                 self._task.start()

@@ -18,11 +18,11 @@ class Pipeline:
             class_name = task_config['class']
             module_name = f'mosamaticdesktop.tasks.{class_name.lower()}'
             input_dir = task_config['input_dir']
-            output_dir = task_config['output_dir']
+            output_dir_name = task_config['output_dir_name']
             params = task_config['params']
             module = importlib.import_module(module_name)
             task_class = getattr(module, class_name)
-            task = task_class(input_dir, output_dir, params)
+            task = task_class(input_dir, output_dir_name, params)
             tasks.append(task)
         return tasks
 

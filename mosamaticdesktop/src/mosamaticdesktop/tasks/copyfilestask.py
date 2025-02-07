@@ -6,8 +6,8 @@ from mosamaticdesktop.tasks.task import Task, TaskStatus
 
 
 class CopyFilesTask(Task):
-    def __init__(self, input_dir, params=None):
-        super(CopyFilesTask, self).__init__(input_dir, 'copyfilestask', params)
+    def __init__(self, input_dir, output_dir_name=None, params=None):
+        super(CopyFilesTask, self).__init__(input_dir, output_dir_name, params)
 
     def execute(self):
         files = os.listdir(self._input_dir)

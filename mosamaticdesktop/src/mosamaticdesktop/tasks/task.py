@@ -19,10 +19,12 @@ class Task(QThread):
     progress = Signal(int)
     status = Signal(str)
 
-    def __init__(self, input_dir, output_dir_name, params=None):
+    def __init__(self, input_dir, output_dir_name=None, params=None):
         super(Task, self).__init__()
         self._input_dir = input_dir
-        self._output_dir = str(Path(self._input_dir).parent / output_dir_name)
+        if output_dir_name is None:
+            output_dir_name = self.__class__.__name__.lower()
+        self._output_dir = os.path.join(str(Path(self._input_dir).parent), output_dir_name)
         self._params = params
         self._canceled = False
         os.makedirs(self._output_dir, exist_ok=True)
