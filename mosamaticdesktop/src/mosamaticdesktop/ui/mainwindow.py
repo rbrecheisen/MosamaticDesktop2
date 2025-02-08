@@ -70,7 +70,7 @@ class MainWindow(QMainWindow):
         if QOperatingSystemVersion.current() >= QOperatingSystemVersion(QOperatingSystemVersion.Windows10):
             self._directory_combo.addItem('D:\\Mosamatic\\Mosamatic Desktop 2.0\\input')
         else:
-            self._directory_combo.addItem('/Users/ralph/input')
+            self._directory_combo.addItem('/Users/ralph/Desktop/downloads/mosamaticdesktop/input')
         ####
         input_group_layout = QVBoxLayout()
         input_group_layout.addWidget(select_dir_button)
