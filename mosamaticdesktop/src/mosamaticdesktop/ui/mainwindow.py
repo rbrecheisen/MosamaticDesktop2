@@ -81,7 +81,7 @@ class MainWindow(QMainWindow):
         self._tasks_combo = QComboBox()
         self._tasks_combo.addItems(TASK_REGISTRY.keys())
         self._tasks_combo.setEditable(False)
-        self._task_params_button = QPushButton('Set task parameters', self)
+        self._task_params_button = QPushButton('Confirm task parameters', self)
         self._task_params_button.clicked.connect(self.set_task_params)
         self._task_run_button = QPushButton('Run task', self)
         self._task_run_button.clicked.connect(self.run_task)
@@ -178,7 +178,11 @@ class MainWindow(QMainWindow):
         if status == 'completed' or status == 'failed' or status == 'canceled':
             self._task_run_button.setEnabled(False)
             self._task_cancel_button.setEnabled(False)          
-            self._task_params_button.setEnabled(True)  
+            self._task_params_button.setEnabled(True)
+            if status == 'completed':
+                output_dir = self._task.get_output_dir()
+                self._directory_combo.addItem(output_dir)
+                self._directory_combo.setCurrentText(output_dir)
 
     def center_window(self):
         screen = QGuiApplication.primaryScreen().geometry()

@@ -27,7 +27,13 @@ class Task(QThread):
         self._output_dir = os.path.join(str(Path(self._input_dir).parent), output_dir_name)
         self._params = params
         self._canceled = False
-        os.makedirs(self._output_dir, exist_ok=True)
+        output_dir = self._output_dir
+        i = 1
+        while os.path.exists(output_dir):
+            output_dir = self._output_dir + f'_{i}'
+            i += 1
+        self._output_dir = output_dir
+        os.makedirs(self._output_dir, exist_ok=False)
 
     def get_input_dir(self):
         return self._input_dir
@@ -62,6 +68,8 @@ class Task(QThread):
     def run(self):
         self.set_status(TaskStatus.RUNNING)
         try:
+            print(f'Input directory: {self.get_input_dir()}')
+            print(f'Output directory: {self.get_output_dir()}')
             print('Parameters:')
             print(json.dumps(self.get_params(), indent=2))
             self.execute()
