@@ -19,7 +19,6 @@ from PySide6.QtCore import QOperatingSystemVersion
 
 from mosamaticdesktop.tasks.registry import TASK_REGISTRY
 from mosamaticdesktop.tasks.pipeline import Pipeline
-from mosamaticdesktop.tasks.copyfilestaskdialog import CopyFilesTaskDialog
 
 BASE_DIR = str(Path(__file__).resolve().parent.parent)
 RESOURCES_DIR = os.path.join(BASE_DIR, 'resources')
@@ -124,13 +123,15 @@ class MainWindow(QMainWindow):
 
     def set_task_params(self):
         self._task_params = None
-        dialog = CopyFilesTaskDialog(self)
-        if dialog.exec() == QDialog.Accepted:
-            self._task_params = dialog.get_params()
-            self._task_run_button.setEnabled(True)
-        else:
-            print('No task parameters set')
-            self._task_run_button.setEnabled(False)
+        task_name = self._tasks_combo.currentText()
+        if task_name and task_name != '':
+            task_dialog = TASK_REGISTRY[task_name][1](self)
+            if task_dialog.exec() == QDialog.Accepted:
+                self._task_params = task_dialog.get_params()
+                self._task_run_button.setEnabled(True)
+            else:
+                print('No task parameters set')
+                self._task_run_button.setEnabled(False)
 
     def run_task(self):
         input_dir = self._directory_combo.currentText()
