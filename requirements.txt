@@ -5,5 +5,3 @@ pytest
 flask
 toga
 pyside6
-PyQt6-WebEgine
-plotly
