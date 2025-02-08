@@ -19,6 +19,24 @@ class Task(QThread):
     progress = Signal(int)
     status = Signal(str)
 
+    """
+    Initializes task instance.
+
+    Parameters
+    ----------
+    input_dir : str
+        Input directory from which to read files
+    output_dir_name : str 
+        Name of output directory where output results will be
+        written. Output directory will be created at same level as input directory.
+        If output directory already exists, a sequence number will be appended.
+    params : dict
+        Task parameter dictionary
+
+    Returns
+    -------
+    None
+    """
     def __init__(self, input_dir, output_dir_name=None, params=None):
         super(Task, self).__init__()
         self._input_dir = input_dir
@@ -35,17 +53,48 @@ class Task(QThread):
         self._output_dir = output_dir
         os.makedirs(self._output_dir, exist_ok=False)
 
+    """
+    Returns task's input directory.
+
+    Returns
+    -------
+    str
+        Input directory
+    """
     def get_input_dir(self):
         return self._input_dir
     
+    """
+    Returns task's output directory.
+
+    Returns
+    -------
+    str
+        Output directory
+    """
     def get_output_dir(self):
         return self._output_dir
     
+    """
+    Checks if task has a given parameter.
+
+    Parameters
+    ----------
+    name : str
+        Name of parameter
+
+    Returns
+    -------
+    bool 
+        True or false
+    """
     def has_param(self, name):
         if self._params is not None:
             return name in self._params.keys()
         return False
     
+    """
+    """
     def get_params(self):
         return self._params
     
