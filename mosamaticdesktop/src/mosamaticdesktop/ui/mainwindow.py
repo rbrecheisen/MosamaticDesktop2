@@ -189,4 +189,3 @@ class MainWindow(QMainWindow):
         x = (screen.width() - self.geometry().width()) / 2
         y = (screen.height() - self.geometry().height()) / 2
         self.move(int(x), int(y))
-        pass
