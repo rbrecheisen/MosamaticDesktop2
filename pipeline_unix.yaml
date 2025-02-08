@@ -1,0 +1,22 @@
+# Example pipeline config
+#
+# Usage:
+# - class: <task class name>
+#   input_dir: <task input directory>
+#   output_dir_name: <task output directory name> (will be created at same level as input directory)
+#   params:
+#     <name 1>: <value>
+#     <name 2>: <value>
+
+tasks:
+
+  - class: CopyFilesTask
+    input_dir: "/Users/ralph/Desktop/downloads/mosamaticdesktop/input"
+    output_dir_name: "copyfilestask1"
+    params:
+
+  - class: CopyFilesTask
+    input_dir: "/Users/ralph/Desktop/downloads/mosamaticdesktop/input"
+    output_dir_name: "copyfilestask2"
+    params:
+      delay: 1
