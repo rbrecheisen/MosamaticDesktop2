@@ -1,5 +1,9 @@
 briefcase
 pendulum
-sqlalchemy
 pytest
 pyside6
+pydicom
+numpy
+pillow
+torch
+torchvision

@@ -1,13 +1,15 @@
 import os
 import time
 import shutil
+import pydicom
 
 from mosamaticdesktop.tasks.task import Task, TaskStatus
+from mosamaticdesktop.utils import is_dicom, is_jpeg2000_compressed
 
 
-class CopyFilesTask(Task):
+class CopyDicomFilesTask(Task):
     def __init__(self, input_dir, output_dir_name=None, params=None):
-        super(CopyFilesTask, self).__init__(input_dir, output_dir_name, params)
+        super(CopyDicomFilesTask, self).__init__(input_dir, output_dir_name, params)
 
     def execute(self):
         files = os.listdir(self.input_dir())
@@ -17,11 +19,18 @@ class CopyFilesTask(Task):
                 self.set_status(TaskStatus.CANCELED)
                 return 
 
-            # Copy source to target
+            # Copy source to target (if DICOM image)
             f = files[step]
             source = os.path.join(self.input_dir(), f)
-            target = os.path.join(self.output_dir(), f)
-            shutil.copy(source, target)
+            if is_dicom(source):
+                target = os.path.join(self.output_dir(), f)
+                if self.get_param('decompress') == 'true':
+                    p = pydicom.dcmread(source)
+                    if is_jpeg2000_compressed(p):
+                        p.decompress()
+                    p.save_as(target)
+                else:
+                    shutil.copy(source, target)
 
             # Update progress
             self.set_progress(step, nr_steps)

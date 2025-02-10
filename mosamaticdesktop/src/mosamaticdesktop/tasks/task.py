@@ -195,6 +195,8 @@ class Task(QThread):
     status : TaskStatus
         Current status of task instance to be broadcast to application.
     """
-    def set_status(self, status):
-        print(f'Status task {self.__class__.__name__}: {status.value}')
+    def set_status(self, status, message=None):
+        if not message:
+            message = ''
+        print(f'Status task {self.__class__.__name__}: {status.value} ({message})')
         self.status.emit(status.value)

@@ -23,7 +23,13 @@ test_sources = [
 requires = [
     "PySide6-Essentials~=6.7",
     # "PySide6-Addons~=6.7",
+    "pendulum",
+    "numpy",
+    "pydicom",
     "pyyaml",
+    "pillow",
+    "torch",
+    "torchvision",
 ]
 test_requires = [
     "pytest",
