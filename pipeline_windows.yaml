@@ -25,7 +25,7 @@ tasks:
     input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\input"
     output_dir_name: "copydicomfilestask"
     params:
-      decompress: true
+      decompress: True
 
   - class: RescaleDicomFilesTask
     input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\copydicomfilestask"

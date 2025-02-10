@@ -19,12 +19,13 @@ class CopyDicomFilesTask(Task):
                 self.set_status(TaskStatus.CANCELED)
                 return 
 
-            # Copy source to target (if DICOM image)
+            # Copy source to target (if DICOM image). If DICOM image is compressed
+            # and the 'decompress' parameter is True, decompress the image
             f = files[step]
             source = os.path.join(self.input_dir(), f)
             if is_dicom(source):
                 target = os.path.join(self.output_dir(), f)
-                if self.get_param('decompress') == 'true':
+                if self.get_param('decompress', False):
                     p = pydicom.dcmread(source)
                     if is_jpeg2000_compressed(p):
                         p.decompress()
