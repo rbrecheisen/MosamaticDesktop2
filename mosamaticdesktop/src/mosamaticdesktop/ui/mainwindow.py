@@ -17,7 +17,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtGui import QGuiApplication, QIcon
 from PySide6.QtCore import QOperatingSystemVersion
 
-from mosamaticdesktop.tasks.registry import TASK_REGISTRY
+from mosamaticdesktop.tasks.taskregistry import TASK_REGISTRY
 from mosamaticdesktop.tasks.pipeline import Pipeline
 
 BASE_DIR = str(Path(__file__).resolve().parent.parent)

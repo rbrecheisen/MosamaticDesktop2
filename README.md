@@ -6,3 +6,7 @@ Desktop version of Mosamatic
 - briefcase update
 - briefcase build
 - briefcase run
+
+
+## TODO
+- Implement RescaleDicomFilesTask
