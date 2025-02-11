@@ -12,7 +12,7 @@ class CopyDicomFilesTask(Task):
         super(CopyDicomFilesTask, self).__init__(input_dir, output_dir_name, params)
 
     def execute(self):
-        files = os.listdir(self.input_dir())
+        files = os.listdir(self.get_input_dir())
         nr_steps = len(files)
         for step in range(nr_steps):
             if self.is_canceled():
@@ -22,9 +22,9 @@ class CopyDicomFilesTask(Task):
             # Copy source to target (if DICOM image). If DICOM image is compressed
             # and the 'decompress' parameter is True, decompress the image
             f = files[step]
-            source = os.path.join(self.input_dir(), f)
+            source = os.path.join(self.get_input_dir(), f)
             if is_dicom(source):
-                target = os.path.join(self.output_dir(), f)
+                target = os.path.join(self.get_output_dir(), f)
                 if self.get_param('decompress', False):
                     p = pydicom.dcmread(source)
                     if is_jpeg2000_compressed(p):

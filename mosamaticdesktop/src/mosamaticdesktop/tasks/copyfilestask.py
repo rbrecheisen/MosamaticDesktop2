@@ -10,7 +10,7 @@ class CopyFilesTask(Task):
         super(CopyFilesTask, self).__init__(input_dir, output_dir_name, params)
 
     def execute(self):
-        files = os.listdir(self.input_dir())
+        files = os.listdir(self.get_input_dir())
         nr_steps = len(files)
         for step in range(nr_steps):
             if self.is_canceled():
@@ -19,8 +19,8 @@ class CopyFilesTask(Task):
 
             # Copy source to target
             f = files[step]
-            source = os.path.join(self.input_dir(), f)
-            target = os.path.join(self.output_dir(), f)
+            source = os.path.join(self.get_input_dir(), f)
+            target = os.path.join(self.get_output_dir(), f)
             shutil.copy(source, target)
 
             # Update progress

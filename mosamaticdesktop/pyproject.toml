@@ -30,6 +30,7 @@ requires = [
     "pillow",
     "torch",
     "torchvision",
+    "opencv-python",
 ]
 test_requires = [
     "pytest",
