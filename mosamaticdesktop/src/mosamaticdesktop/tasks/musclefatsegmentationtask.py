@@ -6,6 +6,9 @@ import torch
 import cv2
 import numpy as np
 
+from torch.nn import MaxPool2d, Sequential, Conv2d, PReLU, BatchNorm2d, Dropout, ConvTranspose2d
+
+from models import UNet
 from mosamaticdesktop.tasks.task import Task, TaskStatus
 from mosamaticdesktop.utils import get_pixels_from_dicom_object, normalize_between, convert_labels_to_157
 
@@ -17,20 +20,21 @@ class MuscleFatSegmentationTask(Task):
     def load_model_files(self, model_dir):
         model, contour_model, params = None, None, None
         for f in os.listdir(model_dir):
-            f_path = os.path.join(model_dir, f)
-            if f.startswith('model'):
-                model = torch.load(f_path, weights_only=False, map_location=torch.device('cpu'))
-                model.to('cpu')
-                model.eval()
-            elif f.startswith('contour_model'):
-                contour_model = torch.load(f_path, weights_only=False, map_location=torch.device('cpu'))
-                contour_model.to('cpu')
-                contour_model.eval()
-            elif f == 'params.json':
-                with open(f_path, 'r') as obj:
-                    params = json.load(obj)
-            else:
-                pass
+            with torch.serialization.safe_globals([UNet, MaxPool2d, Sequential, Conv2d, PReLU, BatchNorm2d, Dropout, ConvTranspose2d]):
+                f_path = os.path.join(model_dir, f)
+                if f.startswith('model'):
+                    model = torch.load(f_path, map_location=torch.device('cpu'))
+                    model.to('cpu')
+                    model.eval()
+                elif f.startswith('contour_model'):
+                    contour_model = torch.load(f_path, map_location=torch.device('cpu'))
+                    contour_model.to('cpu')
+                    contour_model.eval()
+                elif f == 'params.json':
+                    with open(f_path, 'r') as obj:
+                        params = json.load(obj)
+                else:
+                    pass
         return model, contour_model, params
 
     def predict_contour(self, contour_model, img, params) -> np.array:

@@ -53,5 +53,7 @@ class Pipeline:
     Runs pipeline by iterating over each task and running it.
     """
     def run(self):
-        for task in self._tasks:
-            task.run()
+        for i in range(len(self._tasks)):
+            self._tasks[i].run()
+            if i < len(self._tasks) - 1:
+                self._tasks[i+1]._input_dir = self._tasks[i]._output_dir
