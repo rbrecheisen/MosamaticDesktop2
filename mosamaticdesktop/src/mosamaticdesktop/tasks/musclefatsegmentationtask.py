@@ -18,17 +18,18 @@ class MuscleFatSegmentationTask(Task):
         super(MuscleFatSegmentationTask, self).__init__(input_dir, output_dir_name, params)
 
     def load_model_files(self, model_dir):
+        print('Loading model files...')
         model, contour_model, params = None, None, None
         for f in os.listdir(model_dir):
             with torch.serialization.safe_globals([UNet, MaxPool2d, Sequential, Conv2d, PReLU, BatchNorm2d, Dropout, ConvTranspose2d]):
                 f_path = os.path.join(model_dir, f)
                 if f.startswith('model'):
                     model = torch.load(f_path, map_location=torch.device('cpu'))
-                    model.to('cpu')
+                    # model.to('cpu')
                     model.eval()
                 elif f.startswith('contour_model'):
                     contour_model = torch.load(f_path, map_location=torch.device('cpu'))
-                    contour_model.to('cpu')
+                    # contour_model.to('cpu')
                     contour_model.eval()
                 elif f == 'params.json':
                     with open(f_path, 'r') as obj:
