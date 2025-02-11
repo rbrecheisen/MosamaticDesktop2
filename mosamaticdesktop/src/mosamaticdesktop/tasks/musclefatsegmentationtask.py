@@ -19,11 +19,11 @@ class MuscleFatSegmentationTask(Task):
         for f in os.listdir(model_dir):
             f_path = os.path.join(model_dir, f)
             if f.startswith('model'):
-                model = torch.load(f_path)
+                model = torch.load(f_path, weights_only=False, map_location=torch.device('cpu'))
                 model.to('cpu')
                 model.eval()
             elif f.startswith('contour_model'):
-                contour_model = torch.load(f_path)
+                contour_model = torch.load(f_path, weights_only=False, map_location=torch.device('cpu'))
                 contour_model.to('cpu')
                 contour_model.eval()
             elif f == 'params.json':
@@ -63,6 +63,7 @@ class MuscleFatSegmentationTask(Task):
         segmentation_file_name = os.path.split(f_path)[1]
         segmentation_file_path = os.path.join(output_dir, f'{segmentation_file_name}.seg.npy')
         np.save(segmentation_file_path, pred_max)
+        print(f'Saved segmentation: {segmentation_file_path}')
 
     def execute(self):
         # Load PyTorch models and parameters

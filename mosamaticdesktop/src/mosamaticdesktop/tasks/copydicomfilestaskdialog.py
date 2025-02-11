@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QDialog, QVBoxLayout, QCheckBox
+from PySide6.QtWidgets import QDialog, QVBoxLayout, QCheckBox, QPushButton, QHBoxLayout
 
 
 class CopyDicomFilesTaskDialog(QDialog):
@@ -7,8 +7,16 @@ class CopyDicomFilesTaskDialog(QDialog):
         self.setWindowTitle('CopyDicomFilesTask parameters')
         self._task_params = None
         self._decompress_checkbox = QCheckBox('Decompress', self)
+        accept_button = QPushButton('Save', self)
+        accept_button.clicked.connect(self.accept)
+        cancel_button = QPushButton('Cancel', self)
+        cancel_button.clicked.connect(self.reject)
+        button_layout = QHBoxLayout()
+        button_layout.addWidget(accept_button)
+        button_layout.addWidget(cancel_button)
         layout = QVBoxLayout()
         layout.addWidget(self._decompress_checkbox)
+        layout.addLayout(button_layout)
         self.setLayout(layout)
 
     def accept(self):

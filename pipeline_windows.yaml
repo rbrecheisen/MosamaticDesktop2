@@ -27,15 +27,15 @@ tasks:
     params:
       decompress: True
 
-  - class: RescaleDicomFilesTask
-    input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\copydicomfilestask"
-    output_dir_name: "rescaledicomfilestask"
-    params:
-      rows: 512
-      cols: 512
+  # - class: RescaleDicomFilesTask
+  #   input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\copydicomfilestask"
+  #   output_dir_name: "rescaledicomfilestask"
+  #   params:
+  #     rows: 512
+  #     cols: 512
 
   - class: MuscleFatSegmentationTask
-    input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\rescaledicomfilestask"
+    input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\copydicomfilestask"
     output_dir_name: "musclefatsegmentationtask"
     params:
       model_dir: "D:\\Mosamatic\\PyTorchModelFiles"
