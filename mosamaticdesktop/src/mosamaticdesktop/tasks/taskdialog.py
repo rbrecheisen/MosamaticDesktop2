@@ -10,17 +10,19 @@ class TaskDialog(QDialog):
         self._save_button.clicked.connect(self.accept)
         self._cancel_button = QPushButton('Cancel', self)
         self._cancel_button.clicked.connect(self.reject)
-        button_layout = QHBoxLayout()
-        button_layout.addWidget(self._save_button)
-        button_layout.addWidget(self._cancel_button)
+        self._button_layout = QHBoxLayout()
+        self._button_layout.addWidget(self._save_button)
+        self._button_layout.addWidget(self._cancel_button)
+
+    def init_ui(self):
         layout = QVBoxLayout()
-        child_layout = self.get_layout()
-        if child_layout:
-            layout.addLayout(self.get_layout())
-        layout.addLayout(button_layout)
+        content_layout = self.get_content_layout()
+        if content_layout:
+            layout.addLayout(self.get_content_layout())
+        layout.addLayout(self._button_layout)
         self.setLayout(layout)
 
-    def get_layout(self):
+    def get_content_layout(self):
         raise NotImplementedError('Implement in child dialog')
     
     def update_params(self):
@@ -33,11 +35,11 @@ class TaskDialog(QDialog):
     
     def accept(self):
         self._params = self.update_params()
-        super(CopyFilesTaskDialog, self).accept()
+        super(TaskDialog, self).accept()
 
     def reject(self):
         self._params = None
-        super(CopyFilesTaskDialog, self).reject()
+        super(TaskDialog, self).reject()
 
     def get_params(self):
         return self._params
