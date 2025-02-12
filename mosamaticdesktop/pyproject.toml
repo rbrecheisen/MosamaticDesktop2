@@ -11,7 +11,7 @@ author_email = "ralph.brecheisen@gmail.com"
 #### DESKTOP ####
 
 [tool.briefcase.app.mosamaticdesktop]
-formal_name = "Mosamatic Desktop 2"
+formal_name = "mosamaticdesktop"
 description = "Tool for body composition analysis of CT images"
 long_description = """"""
 
@@ -134,7 +134,7 @@ supported = false
 #### SERVER ####
 
 [tool.briefcase.app.mosamaticserver]
-formal_name = "Mosamaic Server"
+formal_name = "Mosamatic Server"
 description = "My first application"
 long_description = """More details about the app should go here.
 """
