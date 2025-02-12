@@ -11,7 +11,7 @@ def pipeline():
 
     # Get request payload
     payload = request.get_json()
-    input_dir = payload.get('input_dir', None)
+    input_dir = payload.get('input_dir', None) 
     config_file_path = payload.get('config_file_path', None)
 
     # Setup pipeline with given config file and input directory

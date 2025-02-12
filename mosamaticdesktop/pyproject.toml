@@ -16,6 +16,7 @@ description = "Tool for body composition analysis of CT images"
 long_description = """"""
 
 sources = [
+    "src/models.py",
     "src/mosamaticdesktop",
 ]
 test_sources = [
@@ -139,7 +140,9 @@ description = "My first application"
 long_description = """More details about the app should go here.
 """
 sources = [
+    "src/models.py",
     "src/mosamaticserver",
+    "src/mosamaticdesktop",
 ]
 test_sources = [
     "tests",
@@ -148,6 +151,7 @@ console_app = true
 
 requires = [
     "flask",
+    "pyyaml",
 ]
 test_requires = [
     "pytest",
