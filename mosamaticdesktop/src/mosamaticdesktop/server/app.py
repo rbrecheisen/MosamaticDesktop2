@@ -25,7 +25,7 @@ def pipeline():
 
 
 def main():
-    app.run(debug=False, use_reloader=False, host='localhost', port=5000)
+    app.run(port=5000)
 
 
 if __name__ == '__main__':
