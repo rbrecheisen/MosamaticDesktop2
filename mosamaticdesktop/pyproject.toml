@@ -34,6 +34,7 @@ requires = [
     "torchvision",
     "opencv-python",
     "scipy",
+    "flask",
 ]
 test_requires = [
     "pytest",
