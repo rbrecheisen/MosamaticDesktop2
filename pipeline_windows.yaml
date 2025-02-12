@@ -10,31 +10,19 @@
 
 tasks:
 
-  # - class: CopyFilesTask
-  #   input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\input"
-  #   output_dir_name: "copyfilestask1"
-  #   params:
-
-  # - class: CopyFilesTask
-  #   input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\copyfilestask1"
-  #   output_dir_name: "copyfilestask2"
-  #   params:
-  #     delay: 1
-
-  - class: CopyDicomFilesTask
+  - class: DecompressDicomFilesTask
     input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\input"
-    output_dir_name: "copydicomfilestask"
+    output_dir_name: "decompressdicomfilestask"
     params:
-      decompress: True
 
   - class: RescaleDicomFilesTask
-    input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\copydicomfilestask"
+    input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\decompressdicomfilestask"
     output_dir_name: "rescaledicomfilestask"
     params:
       target_size: 512
 
-  # - class: MuscleFatSegmentationTask
-  #   input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\copydicomfilestask"
-  #   output_dir_name: "musclefatsegmentationtask"
-  #   params:
-  #     model_dir: "D:\\Mosamatic\\PyTorchModelFiles"
+  - class: MuscleFatSegmentationTask
+    input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\copydicomfilestask"
+    output_dir_name: "musclefatsegmentationtask"
+    params:
+      model_dir: "D:\\Mosamatic\\PyTorchModelFiles"
