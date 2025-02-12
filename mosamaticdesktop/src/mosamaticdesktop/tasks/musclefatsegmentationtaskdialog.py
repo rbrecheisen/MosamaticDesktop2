@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QPushButton, QFileDialog, QLabel, QVBoxLayout, QHBoxLayout
+from PySide6.QtWidgets import QPushButton, QFileDialog, QLabel, QVBoxLayout
 
 from mosamaticdesktop.tasks.taskdialog import TaskDialog
 

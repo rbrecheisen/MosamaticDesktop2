@@ -34,7 +34,7 @@ class TaskDialog(QDialog):
         self._params[name] = value
     
     def accept(self):
-        self._params = self.update_params()
+        self.update_params()
         super(TaskDialog, self).accept()
 
     def reject(self):
