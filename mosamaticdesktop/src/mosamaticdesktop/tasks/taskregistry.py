@@ -8,6 +8,8 @@ from mosamaticdesktop.tasks.musclefatsegmentationtask import MuscleFatSegmentati
 from mosamaticdesktop.tasks.musclefatsegmentationtaskdialog import MuscleFatSegmentationTaskDialog
 from mosamaticdesktop.tasks.createpngsfromsegmentationstask import CreatePngsFromSegmentationsTask
 from mosamaticdesktop.tasks.createpngsfromsegmentationstaskdialog import CreatePngsFromSegmentationsTaskDialog
+from mosamaticdesktop.tasks.calculatemetricstask import CalculateMetricsTask
+from mosamaticdesktop.tasks.calculatemetricstaskdialog import CalculateMetricsTaskDialog
 
 
 TASK_REGISTRY = {
@@ -16,4 +18,5 @@ TASK_REGISTRY = {
     'RescaleDicomFilesTask': (RescaleDicomFilesTask, RescaleDicomFilesTaskDialog),
     'MuscleFatSegmentationTask': (MuscleFatSegmentationTask, MuscleFatSegmentationTaskDialog),
     'CreatePngsFromSegmentationsTask': (CreatePngsFromSegmentationsTask, CreatePngsFromSegmentationsTaskDialog),
+    'CalculateMetricsTask': (CalculateMetricsTask, CalculateMetricsTaskDialog),
 }

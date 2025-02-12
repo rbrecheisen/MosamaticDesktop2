@@ -35,3 +35,9 @@ tasks:
     params:
       fig_width: 10
       fig_height: 10
+
+  - class: CalculateMetricsTask
+    input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\musclefatsegmentationtask"
+    output_dir_name: "calculatemetricstask"
+    params:
+      image_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\rescaledicomfilestask"
