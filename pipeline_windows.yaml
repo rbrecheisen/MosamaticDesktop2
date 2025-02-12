@@ -22,7 +22,14 @@ tasks:
       target_size: 512
 
   - class: MuscleFatSegmentationTask
-    input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\copydicomfilestask"
+    input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\rescaledicomfilestask"
     output_dir_name: "musclefatsegmentationtask"
     params:
       model_dir: "D:\\Mosamatic\\PyTorchModelFiles"
+
+  - class: CreatePngsFromSegmentationsTask
+    input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\musclefatsegmentationtask"
+    output_dir_name: "createpngsfromsegmentationstask"
+    params:
+      fig_width: 10
+      fig_height: 10

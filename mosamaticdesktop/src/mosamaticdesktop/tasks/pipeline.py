@@ -1,35 +1,11 @@
-import os
 import yaml
 import importlib
 
 
 class Pipeline:
-
-    """
-    Initializes pipeline by loading given pipeline configuration YAML
-    file and populating list of task instances.
-
-    Parameters
-    ----------
-    config_file : str
-        Path to pipeline configuration file.
-    """
     def __init__(self, config_file):
         self._tasks = self.load_tasks_from_config(config_file)
 
-    """
-    Loads tasks from pipeline configuration YAML file.
-
-    Parameters
-    ----------
-    config_file : str
-        Path to pipeline configuration file.
-
-    Returns
-    -------
-    list
-        List of task instances.
-    """
     def load_tasks_from_config(self, config_file):
         
         # Load YAML file
@@ -53,9 +29,6 @@ class Pipeline:
             i += 1
         return tasks
 
-    """
-    Runs pipeline by iterating over each task and running it.
-    """
     def run(self):
         for i in range(len(self._tasks)):
             self._tasks[i].run()

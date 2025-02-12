@@ -1,8 +1,8 @@
 import os
-import time
-import shutil
+import numpy as np
 
 from mosamaticdesktop.tasks.task import Task, TaskStatus
+from mosamaticdesktop.utils import convert_numpy_array_to_png_image, AlbertaColorMap
 
 
 class CreatePngsFromSegmentationsTask(Task):
@@ -17,11 +17,19 @@ class CreatePngsFromSegmentationsTask(Task):
                 self.set_status(TaskStatus.CANCELED)
                 return 
 
-            # Copy source to target
+            # Convert source image to PNG format and copy to output
             f = files[step]
             source = os.path.join(self.get_input_dir(), f)
-            target = os.path.join(self.get_output_dir(), f)
-            shutil.copy(source, target)
+            source_image = np.load(source)
+            png_file_name = os.path.split(source)[1] + '.png'
+            convert_numpy_array_to_png_image(
+                source_image, 
+                self.get_output_dir(), 
+                AlbertaColorMap(), 
+                png_file_name,
+                fig_width=self.get_param('fig_width', 10),
+                fig_height=self.get_param('fig_height', 10),
+            )
 
             # Update progress
             self.set_progress(step, nr_steps)
