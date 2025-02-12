@@ -8,7 +8,7 @@ license.file = "LICENSE"
 author = "Ralph Brecheisen"
 author_email = "ralph.brecheisen@gmail.com"
 
-#### DESKTOP ####
+#### DESKTOP ########################################################
 
 [tool.briefcase.app.mosamaticdesktop]
 formal_name = "Mosamatic Desktop 2"
@@ -40,7 +40,7 @@ test_requires = [
 ]
 
 [tool.briefcase.app.mosamaticdesktop.macOS]
-universal_build = true
+universal_build = false
 requires = [
     "std-nslog~=1.0.3",
 ]
@@ -132,7 +132,7 @@ supported = false
 supported = false
 
 
-#### SERVER ####
+#### SERVER ########################################################
 
 [tool.briefcase.app.mosamaticserver]
 formal_name = "Mosamatic Server"
@@ -158,7 +158,7 @@ test_requires = [
 ]
 
 [tool.briefcase.app.mosamaticserver.macOS]
-universal_build = true
+universal_build = false
 requires = [
     # Add your macOS-specific app requirements here
 ]
