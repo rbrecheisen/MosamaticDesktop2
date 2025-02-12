@@ -8,10 +8,12 @@
 #     <name 1>: <value>
 #     <name 2>: <value>
 
+input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\input"
+
 tasks:
 
   - class: DecompressDicomFilesTask
-    input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\input"
+    input_dir:
     output_dir_name: "decompressdicomfilestask"
     params:
 

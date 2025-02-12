@@ -8,6 +8,8 @@ license.file = "LICENSE"
 author = "Ralph Brecheisen"
 author_email = "ralph.brecheisen@gmail.com"
 
+#### DESKTOP ####
+
 [tool.briefcase.app.mosamaticdesktop]
 formal_name = "Mosamatic Desktop 2"
 description = "Tool for body composition analysis of CT images"
@@ -22,7 +24,6 @@ test_sources = [
 
 requires = [
     "PySide6-Essentials~=6.7",
-    # "PySide6-Addons~=6.7",
     "pendulum",
     "numpy",
     "pydicom",
@@ -129,3 +130,93 @@ supported = false
 [tool.briefcase.app.mosamaticdesktop.web]
 supported = false
 
+
+#### SERVER ####
+
+[tool.briefcase.app.mosamaticserver]
+formal_name = "Mosamaic Server"
+description = "My first application"
+long_description = """More details about the app should go here.
+"""
+sources = [
+    "src/mosamaticserver",
+]
+test_sources = [
+    "tests",
+]
+console_app = true
+
+requires = [
+    "flask",
+]
+test_requires = [
+    "pytest",
+]
+
+[tool.briefcase.app.mosamaticserver.macOS]
+universal_build = true
+requires = [
+    # Add your macOS-specific app requirements here
+]
+
+[tool.briefcase.app.mosamaticserver.linux]
+requires = [
+    # Add your Linux-specific app requirements here
+]
+
+[tool.briefcase.app.mosamaticserver.linux.system.debian]
+system_requires = [
+    # Add any system packages needed at build the app here
+]
+
+system_runtime_requires = [
+    # Add any system packages needed at runtime here
+]
+
+[tool.briefcase.app.mosamaticserver.linux.system.rhel]
+system_requires = [
+    # Add any system packages needed at build the app here
+]
+
+system_runtime_requires = [
+    # Add any system packages needed at runtime here
+]
+
+[tool.briefcase.app.mosamaticserver.linux.system.suse]
+system_requires = [
+    # Add any system packages needed at build the app here
+]
+
+system_runtime_requires = [
+    # Add any system packages needed at runtime here
+]
+
+[tool.briefcase.app.mosamaticserver.linux.system.arch]
+system_requires = [
+    # Add any system packages needed at build the app here
+]
+
+system_runtime_requires = [
+    # Add any system packages needed at runtime here
+]
+
+[tool.briefcase.app.mosamaticserver.linux.flatpak]
+flatpak_runtime = "org.freedesktop.Platform"
+flatpak_runtime_version = "24.08"
+flatpak_sdk = "org.freedesktop.Sdk"
+
+[tool.briefcase.app.mosamaticserver.windows]
+requires = [
+    # Add your Windows-specific app requirements here
+]
+
+# Mobile deployments
+[tool.briefcase.app.mosamaticserver.iOS]
+supported = false
+
+[tool.briefcase.app.mosamaticserver.android]
+supported = false
+
+# Web deployments
+[tool.briefcase.app.mosamaticserver.web]
+supported = false
