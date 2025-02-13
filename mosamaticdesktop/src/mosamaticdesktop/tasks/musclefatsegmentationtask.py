@@ -33,21 +33,21 @@ class MuscleFatSegmentationTask(Task):
                     model.to('cpu')
                     model.eval()
                     elapsed_time_model = elapsed_time_in_seconds(start_time_model)
-                    print(f'load_model_files() Elapsed loading model: {elapsed_time_model} seconds')
+                    # print(f'load_model_files() Elapsed loading model: {elapsed_time_model} seconds')
                 elif f.startswith('contour_model'):
                     start_time_contour_model = current_time_in_seconds()
                     contour_model = torch.load(f_path, map_location=torch.device('cpu'))
                     contour_model.to('cpu')
                     contour_model.eval()
                     elapsed_time_contour_model = elapsed_time_in_seconds(start_time_contour_model)
-                    print(f'load_model_files() Elapsed loading contour model: {elapsed_time_contour_model} seconds')
+                    # print(f'load_model_files() Elapsed loading contour model: {elapsed_time_contour_model} seconds')
                 elif f == 'params.json':
                     with open(f_path, 'r') as obj:
                         params = json.load(obj)
                 else:
                     pass
         elapsed_time_total = elapsed_time_in_seconds(start_time_total)
-        print(f'load_model_files() Elapsed total: {elapsed_time_total}')
+        # print(f'load_model_files() Elapsed total: {elapsed_time_total}')
         return model, contour_model, params
 
     def predict_contour(self, contour_model, img, params) -> np.array:
@@ -57,18 +57,18 @@ class MuscleFatSegmentationTask(Task):
         ct = np.copy(img)
         ct = normalize_between(ct, params['min_bound_contour'], params['max_bound_contour'])
         elapsed_time_normalization = elapsed_time_in_seconds(start_time_normalization)
-        print(f'predict_contour() Elapsed time normalization: {elapsed_time_normalization}')
+        # print(f'predict_contour() Elapsed time normalization: {elapsed_time_normalization}')
         
         start_time_resize = current_time_in_seconds()
         target_shape = (512, 512)  
         ct_resized = cv2.resize(ct, target_shape, interpolation=cv2.INTER_LINEAR)
         elapsed_time_resize = elapsed_time_in_seconds(start_time_resize)
-        print(f'predict_contour() Elapsed time resize: {elapsed_time_resize}')
+        # print(f'predict_contour() Elapsed time resize: {elapsed_time_resize}')
         
         start_time_upload_tensor = current_time_in_seconds()
         ct_resized_tensor = torch.tensor(ct_resized, dtype=torch.float32).unsqueeze(0).unsqueeze(0).to('cpu')
         elapsed_time_upload_tensor = elapsed_time_in_seconds(start_time_upload_tensor)
-        print(f'predict_contour() Elapsed time upload tensor: {elapsed_time_upload_tensor}')
+        # print(f'predict_contour() Elapsed time upload tensor: {elapsed_time_upload_tensor}')
 
         start_time_predict = current_time_in_seconds()
         with torch.no_grad():
@@ -76,10 +76,10 @@ class MuscleFatSegmentationTask(Task):
         pred_max = pred.argmax(axis=1)
         elapsed_time_predict = elapsed_time_in_seconds(start_time_predict)
         mask = np.uint8(pred_max)
-        print(f'predict_contour() Elapsed time predict: {elapsed_time_predict}')
+        # print(f'predict_contour() Elapsed time predict: {elapsed_time_predict}')
 
         elapsed_time_total = elapsed_time_in_seconds(start_time_total)
-        print(f'predict_contour() Elapsed time total: {elapsed_time_total}')
+        # print(f'predict_contour() Elapsed time total: {elapsed_time_total}')
         return mask
 
     def process_file(self, f_path, output_dir, model, contour_model, params):
@@ -94,12 +94,12 @@ class MuscleFatSegmentationTask(Task):
             img1 = img1 * mask
         img1 = img1.astype(np.float32)
         elapsed_time_predict_contour = elapsed_time_in_seconds(start_time_predict_contour)
-        print(f'process_file() Elapsed time predict contour: {elapsed_time_predict_contour}')
+        # print(f'process_file() Elapsed time predict contour: {elapsed_time_predict_contour}')
 
         start_time_upload_tensor = current_time_in_seconds()
         img1_tensor = torch.tensor(img1, dtype=torch.float32).unsqueeze(0).to('cpu')
         elapsed_time_upload_tensor = elapsed_time_in_seconds(start_time_upload_tensor)
-        print(f'process_file() Elapsed time upload tensor: {elapsed_time_upload_tensor}')
+        # print(f'process_file() Elapsed time upload tensor: {elapsed_time_upload_tensor}')
 
         start_time_predict = current_time_in_seconds()
         with torch.no_grad():
@@ -108,13 +108,13 @@ class MuscleFatSegmentationTask(Task):
         pred_max = pred_squeeze.argmax(axis=0)
         pred_max = convert_labels_to_157(pred_max)
         elapsed_time_predict = elapsed_time_in_seconds(start_time_predict)
-        print(f'process_file() Elapsed time predict: {elapsed_time_predict}')
+        # print(f'process_file() Elapsed time predict: {elapsed_time_predict}')
 
         segmentation_file_name = os.path.split(f_path)[1]
         segmentation_file_path = os.path.join(output_dir, f'{segmentation_file_name}.seg.npy')
         np.save(segmentation_file_path, pred_max)
         elapsed_time_total = elapsed_time_in_seconds(start_time_total)
-        print(f'process_file() Elapsed time total: {elapsed_time_total}')
+        # print(f'process_file() Elapsed time total: {elapsed_time_total}')
 
     def execute(self):
         # Load PyTorch models and parameters

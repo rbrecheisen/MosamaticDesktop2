@@ -1,5 +1,4 @@
 import os
-import time
 import shutil
 import pydicom
 
@@ -34,6 +33,3 @@ class DecompressDicomFilesTask(Task):
 
             # Update progress
             self.set_progress(step, nr_steps)
-
-            # Wait if delay was specified
-            time.sleep(self.get_param('delay', 0))

@@ -136,21 +136,17 @@ class MainWindow(QMainWindow):
     def run_task(self):
         input_dir = self._directory_combo.currentText()
         if input_dir and input_dir != '':
-            self._task = None
-            if self._task_params is not None:
-                self._progress_bar.setValue(0)
-                self._task_params_button.setEnabled(False)
-                self._task_cancel_button.setEnabled(True)
-                task_name = self._tasks_combo.currentText()
-                self._task = TASK_REGISTRY[task_name][0](
-                    input_dir=self._directory_combo.currentText(), 
-                    params=self._task_params
-                )
-                self._task.progress.connect(self.update_ui)
-                self._task.status.connect(self.update_status)
-                self._task.start()
-            else:
-                QMessageBox.warning(self, 'Task run', 'No task parameters set')
+            self._progress_bar.setValue(0)
+            self._task_params_button.setEnabled(False)
+            self._task_cancel_button.setEnabled(True)
+            task_name = self._tasks_combo.currentText()
+            self._task = TASK_REGISTRY[task_name][0](
+                input_dir=self._directory_combo.currentText(), 
+                params=self._task_params
+            )
+            self._task.progress.connect(self.update_ui)
+            self._task.status.connect(self.update_status)
+            self._task.start()
         else:
             QMessageBox.warning(self, 'Input directory', 'No input directory selected')
 

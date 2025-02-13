@@ -31,7 +31,7 @@ class Pipeline:
             if not input_dir:
                 print(f'Pipeline.load_config() task {class_name} has no input directory. Using pipeline input directory...')
                 input_dir = self._input_dir
-            output_dir_name = f'{i:02d}_' + task_config['output_dir_name'] # Prepend index
+            output_dir_name = task_config['output_dir_name']
             params = task_config['params']
             module = importlib.import_module(module_name)
             task_class = getattr(module, class_name)
@@ -42,8 +42,6 @@ class Pipeline:
     def run(self):
         for i in range(len(self._tasks)):
             self._tasks[i].run()
-            if i < len(self._tasks) - 1:
-                self._tasks[i+1]._input_dir = self._tasks[i]._output_dir
 
     def update_input_dir(self, input_dir):
         self._input_dir = input_dir
