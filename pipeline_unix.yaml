@@ -8,15 +8,36 @@
 #     <name 1>: <value>
 #     <name 2>: <value>
 
+input_dir: "/Users/ralph/Desktop/downloads/mosamaticdesktop/input"
+
 tasks:
 
-  - class: CopyFilesTask
-    input_dir: "/Users/ralph/Desktop/downloads/mosamaticdesktop/input"
-    output_dir_name: "copyfilestask1"
+  - class: DecompressDicomFilesTask
+    input_dir:
+    output_dir_name: "decompressdicomfilestask"
     params:
 
-  - class: CopyFilesTask
-    input_dir: "/Users/ralph/Desktop/downloads/mosamaticdesktop/input"
-    output_dir_name: "copyfilestask2"
+  - class: RescaleDicomFilesTask
+    input_dir: "/Users/ralph/Desktop/downloads/mosamaticdesktop/decompressdicomfilestask"
+    output_dir_name: "rescaledicomfilestask"
     params:
-      delay: 1
+      target_size: 512
+
+  - class: MuscleFatSegmentationTask
+    input_dir: "/Users/ralph/Desktop/downloads/mosamaticdesktop/rescaledicomfilestask"
+    output_dir_name: "musclefatsegmentationtask"
+    params:
+      model_dir: "/Users/ralph/Desktop/downloads/pytorchmodelfiles"
+
+  - class: CreatePngsFromSegmentationsTask
+    input_dir: "/Users/ralph/Desktop/downloads/mosamaticdesktop/musclefatsegmentationtask"
+    output_dir_name: "createpngsfromsegmentationstask"
+    params:
+      fig_width: 10
+      fig_height: 10
+
+  - class: CalculateMetricsTask
+    input_dir: "/Users/ralph/Desktop/downloads/mosamaticdesktop/musclefatsegmentationtask"
+    output_dir_name: "calculatemetricstask"
+    params:
+      image_dir: "/Users/ralph/Desktop/downloads/mosamaticdesktop/rescaledicomfilestask"

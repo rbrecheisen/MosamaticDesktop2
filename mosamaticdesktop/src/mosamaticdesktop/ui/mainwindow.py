@@ -61,7 +61,7 @@ class MainWindow(QMainWindow):
 
     def init_input_group(self):
         self._input_group = QGroupBox('Input')
-        select_dir_button = QPushButton('Select input directory:', self)
+        select_dir_button = QPushButton('Select input directory', self)
         select_dir_button.clicked.connect(self.select_input_directory)
         self._directory_combo = QComboBox()
         self._directory_combo.setEditable(True)
