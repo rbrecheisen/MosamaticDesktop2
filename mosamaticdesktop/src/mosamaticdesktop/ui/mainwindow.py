@@ -39,6 +39,7 @@ class MainWindow(QMainWindow):
         self._tasks_group = None
         self._pipeline_group = None
         self._pipeline_config_label = None
+        self._pipeline_run_button = None
         self._progress_bar = None
         self._task_status = None
         self.init_ui()
@@ -66,10 +67,10 @@ class MainWindow(QMainWindow):
         self._directory_combo = QComboBox()
         self._directory_combo.setEditable(True)
         #### Hack for quick testing
-        if QOperatingSystemVersion.current() >= QOperatingSystemVersion(QOperatingSystemVersion.Windows10):
-            self._directory_combo.addItem('D:\\Mosamatic\\Mosamatic Desktop 2.0\\input')
-        else:
-            self._directory_combo.addItem('/Users/ralph/Desktop/downloads/mosamaticdesktop/input')
+        # if QOperatingSystemVersion.current() >= QOperatingSystemVersion(QOperatingSystemVersion.Windows10):
+        #     self._directory_combo.addItem('D:\\Mosamatic\\Mosamatic Desktop 2.0\\input')
+        # else:
+        #     self._directory_combo.addItem('/Users/ralph/Desktop/downloads/mosamaticdesktop/input')
         ####
         input_group_layout = QVBoxLayout()
         input_group_layout.addWidget(select_dir_button)
@@ -105,12 +106,12 @@ class MainWindow(QMainWindow):
         load_pipeline_config_button = QPushButton('Load pipeline config', self)
         load_pipeline_config_button.clicked.connect(self.load_pipeline_config)
         self._pipeline_config_label = QLabel('No config file selected')
-        run_pipeline_button = QPushButton('Run pipeline', self)
-        run_pipeline_button.clicked.connect(self.run_pipeline)
+        self._pipeline_run_button = QPushButton('Run pipeline', self)
+        self._pipeline_run_button.clicked.connect(self.run_pipeline)
         pipeline_group_layout = QVBoxLayout()
         pipeline_group_layout.addWidget(load_pipeline_config_button)
         pipeline_group_layout.addWidget(self._pipeline_config_label)
-        pipeline_group_layout.addWidget(run_pipeline_button)
+        pipeline_group_layout.addWidget(self._pipeline_run_button)
         self._pipeline_group.setLayout(pipeline_group_layout)
 
     def select_input_directory(self):
@@ -144,13 +145,6 @@ class MainWindow(QMainWindow):
                 input_dir=self._directory_combo.currentText(), 
                 params=self._task_params
             )
-            # Check if task's output directory already exists
-            output_dir = self._task.get_output_dir()
-            if os.path.exists(output_dir):
-                if QMessageBox.question(
-                    self, 'Confirm', 'Task output directory already exists. Continue anyway?', 
-                    QMessageBox.Yes | QMessageBox.No ) == QMessageBox.No:
-                    return                
             self._task.progress.connect(self.update_ui)
             self._task.status.connect(self.update_status)
             self._task.start()
@@ -170,8 +164,10 @@ class MainWindow(QMainWindow):
             self._pipeline_config_label.setText('No config file selected')
 
     def run_pipeline(self):
+        self._pipeline_run_button.setEnabled(False)
         if self._pipeline:
             self._pipeline.run()
+        self._pipeline_run_button.setEnabled(True)
 
     def update_ui(self, progress):
         self._progress_bar.setValue(progress)

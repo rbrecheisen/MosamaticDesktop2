@@ -16,15 +16,12 @@ class CopyFilesTask(Task):
             if self.is_canceled():
                 self.set_status(TaskStatus.CANCELED)
                 return 
-
             # Copy source to target
             f = files[step]
             source = os.path.join(self.get_input_dir(), f)
             target = os.path.join(self.get_output_dir(), f)
             shutil.copy(source, target)
-
             # Update progress
             self.set_progress(step, nr_steps)
-
             # Wait if delay was specified
             time.sleep(self.get_param('delay', 0))

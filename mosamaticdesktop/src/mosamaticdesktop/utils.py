@@ -1,5 +1,6 @@
 import os
 import time
+import warnings
 import math
 import pendulum
 import pydicom
@@ -7,6 +8,8 @@ import numpy as np
 
 from PIL import Image
 from pydicom.uid import ExplicitVRLittleEndian, ImplicitVRLittleEndian, ExplicitVRBigEndian
+
+warnings.filterwarnings("ignore", message="Invalid value for VR UI:", category=UserWarning)
 
 
 def create_name_with_timestamp(prefix: str='') -> str:
@@ -49,6 +52,12 @@ def is_dicom(f: str) -> bool:
         return True
     except pydicom.errors.InvalidDicomError:
         return False
+    
+
+def load_dicom(f):
+    if is_dicom(f):
+        return pydicom.dcmread(f)
+    return None
 
 
 def is_jpeg2000_compressed(p: pydicom.FileDataset):

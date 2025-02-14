@@ -19,11 +19,11 @@ class Pipeline:
         if not os.path.exists(input_dir):
             errors.append(f'Input directory {input_dir} does not exist')
             return errors
-                
+        # Check there are tasks defined in the pipeline                
         if 'tasks' not in config.keys():
             errors.append('Entry "tasks" missing')
             return errors
-        
+        # Check each task's configuration
         for task_config in config['tasks']:            
             if 'class' not in task_config.keys():
                 errors.append(f'Task "class" entry missing ({task_config})')
@@ -32,30 +32,21 @@ class Pipeline:
             if class_name not in TASK_REGISTRY.keys():
                 errors.append(f'Task {class_name} not in TASK_REGISTRY')
                 continue
-            
             if 'input_dir' not in task_config.keys():
                 errors.append(f'Task {class_name} "input_dir" entry missing (can be empty so it is set to the pipeline input directory)')
                 continue
-            input_dir = task_config['input_dir']
-            if input_dir and not os.path.exists(input_dir):
-                errors.append(f'Task {class_name} input directory does not exist')
-                continue
-
             if 'output_dir_name' not in task_config.keys():
                 errors.append(f'Task {class_name} "output_dir_name" entry missing')
                 continue
-            
             if 'params' not in task_config.keys():
                 errors.append(f'Task {class_name} "params" entry missing (can be empty)')
                 continue
         return errors
 
     def load_config(self, config_file):
-        
         # Load YAML file
         with open(config_file, 'r') as f:
             config = yaml.safe_load(f)
-
         # Check contents (especially existence of directories)
         errors = self.check_config(config)
         if len(errors) > 0:
@@ -63,12 +54,10 @@ class Pipeline:
             for error in errors:
                 print(f' - {error}')
             return
-
         # Get input directory for pipeline
         self._input_dir = config['input_dir']
         if not self._input_dir:
             raise RuntimeError(f'Pipeline has no input directory!')
-
         # Load task instances. When we run tasks through the pipeline the 
         # output directory names will be prepended with an index
         self._tasks = []

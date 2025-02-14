@@ -16,7 +16,6 @@ class CreatePngsFromSegmentationsTask(Task):
             if self.is_canceled():
                 self.set_status(TaskStatus.CANCELED)
                 return 
-
             # Convert source image to PNG format and copy to output
             f = files[step]
             source = os.path.join(self.get_input_dir(), f)
@@ -30,6 +29,5 @@ class CreatePngsFromSegmentationsTask(Task):
                 fig_width=self.get_param('fig_width', 10),
                 fig_height=self.get_param('fig_height', 10),
             )
-
             # Update progress
             self.set_progress(step, nr_steps)

@@ -1,12 +1,11 @@
 import os
-import time
 import shutil
-import pydicom
 import numpy as np
 
 from scipy.ndimage import zoom
 
 from mosamaticdesktop.tasks.task import Task, TaskStatus
+from mosamaticdesktop.utils import load_dicom
 
 
 class RescaleDicomFilesTask(Task):
@@ -15,7 +14,7 @@ class RescaleDicomFilesTask(Task):
 
     def process_file(self, f_name, target_size, input_dir, output_dir):
         source = os.path.join(input_dir, f_name)
-        p = pydicom.dcmread(source)
+        p = load_dicom(source)
         if p.Rows != target_size or p.Columns != target_size:
             pixel_array = p.pixel_array
             hu_array = pixel_array * p.RescaleSlope + p.RescaleIntercept
