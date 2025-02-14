@@ -50,16 +50,13 @@ class RescaleDicomFilesTask(Task):
             if self.is_canceled():
                 self.set_status(TaskStatus.CANCELED)
                 return 
-
             # Load DICOM image and try to rescale. If it was rescaled save the file path
             f = files[step]
             rescaled_file = self.process_file(f, target_size, self.get_input_dir(), self.get_output_dir())
             if rescaled_file:
                 rescaled_files.append(rescaled_file)
-
             # Update progress
             self.set_progress(step, nr_steps)
-
         # If files were rescaled, write their paths to a text file
         if len(rescaled_files) > 0:
             with open(os.path.join(self.get_output_dir(), 'rescaled_files.txt'), 'w') as f_obj:

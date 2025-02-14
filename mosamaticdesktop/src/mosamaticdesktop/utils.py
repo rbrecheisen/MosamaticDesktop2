@@ -1,15 +1,27 @@
 import os
+import sys
 import time
 import warnings
 import math
 import pendulum
 import pydicom
 import numpy as np
+import logging
 
 from PIL import Image
 from pydicom.uid import ExplicitVRLittleEndian, ImplicitVRLittleEndian, ExplicitVRBigEndian
 
 warnings.filterwarnings("ignore", message="Invalid value for VR UI:", category=UserWarning)
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout)
+    ]
+)
+
+LOGGER = logging.getLogger(__name__)
 
 
 def create_name_with_timestamp(prefix: str='') -> str:

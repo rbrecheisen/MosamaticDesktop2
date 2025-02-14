@@ -5,7 +5,7 @@ import numpy as np
 
 from mosamaticdesktop.tasks.task import Task, TaskStatus
 from mosamaticdesktop.utils import (
-    calculate_area, calculate_index, calculate_mean_radiation_attenuation, get_pixels_from_dicom_object, load_dicom
+    calculate_area, calculate_index, calculate_mean_radiation_attenuation, get_pixels_from_dicom_object, load_dicom, LOGGER
 )
 
 MUSCLE, VAT, SAT = 1, 5, 7
@@ -53,7 +53,7 @@ class CalculateMetricsTask(Task):
         patient_heights_file = self.get_param('patient_heights_file', None)
         if patient_heights_file:
             patient_heights = self.load_patient_heights(patient_heights_file)
-            print(f'Patient heights: {patient_heights}')
+            LOGGER.info(f'Patient heights: {patient_heights}')
         data = {
             'file': [], 
             'muscle_area': [], 'muscle_idx': [], 'muscle_ra': [],
@@ -92,7 +92,7 @@ class CalculateMetricsTask(Task):
             if patient_heights:
                 sat_idx = calculate_index(sat_area, self.get_patient_height(file_name, patient_heights))
             sat_ra = calculate_mean_radiation_attenuation(image, segmentation, SAT)
-            print(f'file: {file_name}, ' +
+            LOGGER.info(f'file: {file_name}, ' +
                   f'muscle_area: {muscle_area}, muscle_idx: {muscle_idx}, muscle_ra: {muscle_ra}, ' +
                   f'vat_area: {vat_area}, vat_idx: {vat_idx}, vat_ra: {vat_ra}, ' +
                   f'sat_area: {sat_area}, sat_idx: {sat_idx}, sat_ra: {sat_ra}')
@@ -113,4 +113,4 @@ class CalculateMetricsTask(Task):
         csv_file_path = os.path.join(self.get_output_dir(), 'bc_metrics.csv')
         df = pd.DataFrame(data=data)
         df.to_csv(csv_file_path, index=False, sep=';')
-        print(f'Saved CSV with body composition metrics in {csv_file_path}')
+        LOGGER.info(f'Saved CSV with body composition metrics in {csv_file_path}')

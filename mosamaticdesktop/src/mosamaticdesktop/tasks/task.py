@@ -6,6 +6,8 @@ from pathlib import Path
 from enum import Enum
 from PySide6.QtCore import QThread, Signal
 
+from mosamaticdesktop.utils import LOGGER
+
 
 class TaskStatus(Enum):
     IDLE = 'idle'
@@ -62,15 +64,15 @@ class Task(QThread):
     def run(self):
         self.set_status(TaskStatus.RUNNING)
         try:
-            print(f'Input directory: {self.get_input_dir()}')
-            print(f'Output directory: {self.get_output_dir()}')
-            print('Parameters:')
-            print(json.dumps(self.get_params(), indent=2))
+            LOGGER.info(f'Input directory: {self.get_input_dir()}')
+            LOGGER.info(f'Output directory: {self.get_output_dir()}')
+            LOGGER.info('Parameters:')
+            LOGGER.info(json.dumps(self.get_params(), indent=2))
             self.execute()
             if not self.is_canceled():
                 self.set_status(TaskStatus.COMPLETED)
         except Exception as e:
-            print(f'ERROR: Task failed ({e})')
+            LOGGER.info(f'ERROR: Task failed ({e})')
             self.set_status(TaskStatus.FAILED)
 
     def cancel(self):
@@ -78,11 +80,11 @@ class Task(QThread):
 
     def set_progress(self, step, nr_steps):
         progress = int(((step + 1) / (nr_steps)) * 100)
-        print(f'Progress task {self.__class__.__name__}: {progress}')
+        LOGGER.info(f'Progress task {self.__class__.__name__}: {progress}')
         self.progress.emit(progress)
 
     def set_status(self, status, message=None):
         if not message:
             message = ''
-        print(f'Status task {self.__class__.__name__}: {status.value} ({message})')
+        LOGGER.info(f'Status task {self.__class__.__name__}: {status.value} ({message})')
         self.status.emit(status.value)

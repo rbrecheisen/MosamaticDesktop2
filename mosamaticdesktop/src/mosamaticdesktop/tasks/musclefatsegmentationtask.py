@@ -10,7 +10,7 @@ from models import UNet
 from mosamaticdesktop.tasks.task import Task, TaskStatus
 from mosamaticdesktop.utils import (
     get_pixels_from_dicom_object, normalize_between, convert_labels_to_157,
-    current_time_in_seconds, elapsed_time_in_seconds, load_dicom
+    current_time_in_seconds, elapsed_time_in_seconds, load_dicom, LOGGER
 )
 
 
@@ -19,7 +19,7 @@ class MuscleFatSegmentationTask(Task):
         super(MuscleFatSegmentationTask, self).__init__(input_dir, output_dir_name, params)
 
     def load_model_files(self, model_dir):
-        print('MuscleFatSegmentationTask.load_model_files()')
+        LOGGER.info('MuscleFatSegmentationTask.load_model_files()')
         # start_time_total = current_time_in_seconds()
         model, contour_model, params = None, None, None
         for f in os.listdir(model_dir):
@@ -76,12 +76,12 @@ class MuscleFatSegmentationTask(Task):
         return mask
 
     def process_file(self, f_path, output_dir, model, contour_model, params):
-        print(f'MuscleFatSegmentationTask.process_file(): {f_path}')
+        LOGGER.info(f'MuscleFatSegmentationTask.process_file(): {f_path}')
         # start_time_total = current_time_in_seconds()
         # start_time_predict_contour = current_time_in_seconds()
         p = load_dicom(f_path)
         if p is None:
-            print(f'File {f_path} is not valid DICOM, skipping...')
+            LOGGER.info(f'File {f_path} is not valid DICOM, skipping...')
             return
         img1 = get_pixels_from_dicom_object(p, normalize=True)
         if contour_model:

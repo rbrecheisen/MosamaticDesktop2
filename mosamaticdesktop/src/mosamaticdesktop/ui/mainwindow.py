@@ -19,6 +19,7 @@ from PySide6.QtCore import QOperatingSystemVersion
 
 from mosamaticdesktop.tasks.taskregistry import TASK_REGISTRY
 from mosamaticdesktop.tasks.pipeline import Pipeline
+from mosamaticdesktop.utils import LOGGER
 
 BASE_DIR = str(Path(__file__).resolve().parent.parent)
 RESOURCES_DIR = os.path.join(BASE_DIR, 'resources')
@@ -131,7 +132,7 @@ class MainWindow(QMainWindow):
                 self._task_params = task_dialog.get_params()
                 self._task_run_button.setEnabled(True)
             else:
-                print('No task parameters set')
+                LOGGER.info('No task parameters set')
                 self._task_run_button.setEnabled(False)
 
     def run_task(self):

@@ -3,6 +3,7 @@ import yaml
 import importlib
 
 from mosamaticdesktop.tasks.taskregistry import TASK_REGISTRY
+from mosamaticdesktop.utils import LOGGER
 
 
 class Pipeline:
@@ -50,7 +51,7 @@ class Pipeline:
         # Check contents (especially existence of directories)
         errors = self.check_config(config)
         if len(errors) > 0:
-            print(f'ERROR: configuration file has errors:')
+            LOGGER.info(f'ERROR: configuration file has errors:')
             for error in errors:
                 print(f' - {error}')
             return
@@ -69,7 +70,7 @@ class Pipeline:
             # The first task may not have an input directory. In that case, take the main
             # pipeline input directory
             if not input_dir:
-                print(f'Pipeline.load_config() task {class_name} has no input directory. Using pipeline input directory...')
+                LOGGER.info(f'Pipeline.load_config() task {class_name} has no input directory. Using pipeline input directory...')
                 input_dir = self._input_dir
             output_dir_name = task_config['output_dir_name']
             params = task_config['params']

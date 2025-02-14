@@ -6,6 +6,7 @@ from PySide6.QtWidgets import QApplication
 
 from mosamaticdesktop.ui.mainwindow import MainWindow
 from mosamaticdesktop.server.api import main as server
+from mosamaticdesktop.utils import LOGGER
 
 
 def run_desktop():
@@ -30,10 +31,10 @@ def main():
     parser.add_argument('--server', action='store_true', help='Runs in server mode')
     args = parser.parse_args()
     if args.server:
-        print('Running in server mode...')
+        LOGGER.info('Running in server mode...')
         run_server()
     else:
-        print('Running UI...')
+        LOGGER.info('Running UI...')
         run_desktop()
 
 
