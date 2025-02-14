@@ -1,13 +1,3 @@
-# Example pipeline config
-#
-# Usage:
-# - class: <task class name>
-#   input_dir: <task input directory>
-#   output_dir_name: <task output directory name> (will be created at same level as input directory)
-#   params:
-#     <name 1>: <value>
-#     <name 2>: <value>
-
 input_dir: "/Users/ralph/Desktop/downloads/mosamaticdesktop/input"
 
 tasks:
@@ -41,3 +31,4 @@ tasks:
     output_dir_name: "calculatemetricstask"
     params:
       image_dir: "/Users/ralph/Desktop/downloads/mosamaticdesktop/rescaledicomfilestask"
+      patient_heights_file: "/Users/ralph/Desktop/downloads/mosamaticdesktop/patient_heights.csv"
