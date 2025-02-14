@@ -1,5 +1,8 @@
+import os
 import yaml
 import importlib
+
+from mosamaticdesktop.tasks.taskregistry import TASK_REGISTRY
 
 
 class Pipeline:
@@ -7,11 +10,59 @@ class Pipeline:
         self._input_dir, self._tasks = None, []
         self.load_config(config_file)
 
+    def check_config(self, config):
+        errors = []
+        if 'input_dir' not in config.keys():
+            errors.append('Entry "input_dir" missing')
+            return errors
+        input_dir = config['input_dir']
+        if not os.path.exists(input_dir):
+            errors.append(f'Input directory {input_dir} does not exist')
+            return errors
+                
+        if 'tasks' not in config.keys():
+            errors.append('Entry "tasks" missing')
+            return errors
+        
+        for task_config in config['tasks']:            
+            if 'class' not in task_config.keys():
+                errors.append(f'Task "class" entry missing ({task_config})')
+                continue
+            class_name = task_config['class']
+            if class_name not in TASK_REGISTRY.keys():
+                errors.append(f'Task {class_name} not in TASK_REGISTRY')
+                continue
+            
+            if 'input_dir' not in task_config.keys():
+                errors.append(f'Task {class_name} "input_dir" entry missing (can be empty so it is set to the pipeline input directory)')
+                continue
+            input_dir = task_config['input_dir']
+            if input_dir and not os.path.exists(input_dir):
+                errors.append(f'Task {class_name} input directory does not exist')
+                continue
+
+            if 'output_dir_name' not in task_config.keys():
+                errors.append(f'Task {class_name} "output_dir_name" entry missing')
+                continue
+            
+            if 'params' not in task_config.keys():
+                errors.append(f'Task {class_name} "params" entry missing (can be empty)')
+                continue
+        return errors
+
     def load_config(self, config_file):
         
         # Load YAML file
         with open(config_file, 'r') as f:
             config = yaml.safe_load(f)
+
+        # Check contents (especially existence of directories)
+        errors = self.check_config(config)
+        if len(errors) > 0:
+            print(f'ERROR: configuration file has errors:')
+            for error in errors:
+                print(f' - {error}')
+            return
 
         # Get input directory for pipeline
         self._input_dir = config['input_dir']
