@@ -5,7 +5,7 @@ import importlib.metadata
 from PySide6.QtWidgets import QApplication
 
 from mosamaticdesktop.ui.mainwindow import MainWindow
-from mosamaticdesktop.server.app import main as server
+from mosamaticdesktop.server.api import main as server
 
 
 def run_desktop():
