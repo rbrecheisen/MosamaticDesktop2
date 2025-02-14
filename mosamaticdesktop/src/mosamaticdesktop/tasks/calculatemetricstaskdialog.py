@@ -11,7 +11,7 @@ class CalculateMetricsTaskDialog(TaskDialog):
         self._open_image_dir_button.clicked.connect(self.open_model_directory)
         self._image_dir_label = QLabel('Image directory:', self)
         self._patient_heights_file = None
-        self._load_patient_heights_file_button = QPushButton('Load patient heights file', self)
+        self._load_patient_heights_file_button = QPushButton('(Optional) Load patient heights file', self)
         self._load_patient_heights_file_button.clicked.connect(self.load_patient_heights_file)
         self._patient_heights_file_label = QLabel('Patient heights:', self)
         self._layout = QVBoxLayout()

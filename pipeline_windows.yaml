@@ -1,34 +1,34 @@
-# Example pipeline config
-#
-# Usage:
-# - class: <task class name>
-#   input_dir: <task input directory>
-#   output_dir_name: <task output directory name> (will be created at same level as input directory)
-#   params:
-#     <name 1>: <value>
-#     <name 2>: <value>
-
+# Main input directory for pipeline
 input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\input"
 
+# Tasks to be executed
 tasks:
 
+  # Decompresses DICOM files if needed
   - class: DecompressDicomFilesTask
     input_dir:
     output_dir_name: "decompressdicomfilestask"
     params:
 
+  # Rescales DICOM files to 512 x 512 if needed. If files do not need to be rescaled
+  # this task only copies them to the output directory. If they have been rescaled
+  # a text file 'rescaled_files.txt' will be created in the output directory listing
+  # the file paths.
   - class: RescaleDicomFilesTask
     input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\decompressdicomfilestask"
     output_dir_name: "rescaledicomfilestask"
     params:
       target_size: 512
 
+  # Extracts muscle and fat regions in CT images at L3. Requires specification of the
+  # directory containing the PyTorch model files.
   - class: MuscleFatSegmentationTask
     input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\rescaledicomfilestask"
     output_dir_name: "musclefatsegmentationtask"
     params:
       model_dir: "D:\\Mosamatic\\PyTorchModelFiles"
 
+  # Creates PNG images for each segmentation
   - class: CreatePngsFromSegmentationsTask
     input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\musclefatsegmentationtask"
     output_dir_name: "createpngsfromsegmentationstask"
@@ -36,8 +36,11 @@ tasks:
       fig_width: 10
       fig_height: 10
 
+  # Calculate body composition metrics for each DICOM file and segmentation. Optionally,
+  # you can provide a CSV file patient heights (two columns: "file" and "height" in meters)
   - class: CalculateMetricsTask
     input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\musclefatsegmentationtask"
     output_dir_name: "calculatemetricstask"
     params:
       image_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\rescaledicomfilestask"
+      patient_heights_file: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\patient_heights.csv"

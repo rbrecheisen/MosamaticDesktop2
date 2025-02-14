@@ -144,6 +144,13 @@ class MainWindow(QMainWindow):
                 input_dir=self._directory_combo.currentText(), 
                 params=self._task_params
             )
+            # Check if task's output directory already exists
+            output_dir = self._task.get_output_dir()
+            if os.path.exists(output_dir):
+                if QMessageBox.question(
+                    self, 'Confirm', 'Task output directory already exists. Continue anyway?', 
+                    QMessageBox.Yes | QMessageBox.No ) == QMessageBox.No:
+                    return                
             self._task.progress.connect(self.update_ui)
             self._task.status.connect(self.update_status)
             self._task.start()

@@ -34,28 +34,36 @@ class RescaleDicomFilesTask(Task):
             p.PixelData = pixel_array_rescaled.tobytes()
             p.Rows = target_size
             p.Columns = target_size
-            items = os.path.splitext(f_name)
-            target = os.path.join(output_dir, items[0] + f'_{target_size}' + items[1])
+            target = os.path.join(output_dir, f_name)
             p.save_as(target)
+            return target
         else:
             target = os.path.join(output_dir, f_name)
             shutil.copy(source, target)
+            return None
 
     def execute(self):
         files = os.listdir(self.get_input_dir())
         target_size = self.get_param('target_size', 512)
+        rescaled_files = []
         nr_steps = len(files)
         for step in range(nr_steps):
             if self.is_canceled():
                 self.set_status(TaskStatus.CANCELED)
                 return 
 
-            # Load DICOM image
+            # Load DICOM image and try to rescale. If it was rescaled save the file path
             f = files[step]
-            self.process_file(f, target_size, self.get_input_dir(), self.get_output_dir())
+            rescaled_file = self.process_file(f, target_size, self.get_input_dir(), self.get_output_dir())
+            if rescaled_file:
+                rescaled_files.append(rescaled_file)
 
             # Update progress
             self.set_progress(step, nr_steps)
 
-            # Wait if delay was specified
-            time.sleep(self.get_param('delay', 0))
+        # If files were rescaled, write their paths to a text file
+        if len(rescaled_files) > 0:
+            with open(os.path.join(self.get_output_dir(), 'rescaled_files.txt'), 'w') as f_obj:
+                f_obj.write(f'Following files have been rescaled to {target_size} x {target_size}:\n')
+                for f in rescaled_files:
+                    f_obj.write(f + '\n')

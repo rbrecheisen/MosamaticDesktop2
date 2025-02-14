@@ -35,6 +35,7 @@ requires = [
     "opencv-python",
     "scipy",
     "flask",
+    "pandas",
 ]
 test_requires = [
     "pytest",
