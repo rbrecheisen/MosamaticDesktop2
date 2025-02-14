@@ -2,12 +2,17 @@ import os
 import yaml
 import importlib
 
+from PySide6.QtCore import QThread, Signal
+
 from mosamaticdesktop.tasks.taskregistry import TASK_REGISTRY
 from mosamaticdesktop.utils import LOGGER
 
 
-class Pipeline:
+class Pipeline(QThread):
+    progress = Signal(int)
+
     def __init__(self, config_file):
+        super(Pipeline, self).__init__()
         self._input_dir, self._tasks = None, []
         self.load_config(config_file)
 
@@ -55,14 +60,13 @@ class Pipeline:
             for error in errors:
                 print(f' - {error}')
             return
-        # Get input directory for pipeline
+        # Get input directory for pipeline and count the number of files
         self._input_dir = config['input_dir']
         if not self._input_dir:
             raise RuntimeError(f'Pipeline has no input directory!')
         # Load task instances. When we run tasks through the pipeline the 
         # output directory names will be prepended with an index
         self._tasks = []
-        i = 1
         for task_config in config['tasks']:
             class_name = task_config['class']
             module_name = f'mosamaticdesktop.tasks.{class_name.lower()}'
@@ -78,11 +82,10 @@ class Pipeline:
             task_class = getattr(module, class_name)
             task = task_class(input_dir, output_dir_name, params)
             self._tasks.append(task)
-            i += 1
 
     def run(self):
-        for i in range(len(self._tasks)):
-            self._tasks[i].run()
+        for step in range(len(self._tasks)):
+            self._tasks[step].run()
 
     def update_input_dir(self, input_dir):
         self._input_dir = input_dir

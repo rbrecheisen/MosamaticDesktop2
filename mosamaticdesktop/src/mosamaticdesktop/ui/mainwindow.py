@@ -83,7 +83,7 @@ class MainWindow(QMainWindow):
         self._tasks_combo = QComboBox()
         self._tasks_combo.addItems(TASK_REGISTRY.keys())
         self._tasks_combo.setEditable(False)
-        self._task_params_button = QPushButton('Confirm task parameters', self)
+        self._task_params_button = QPushButton('Set task parameters', self)
         self._task_params_button.clicked.connect(self.set_task_params)
         self._task_run_button = QPushButton('Run task', self)
         self._task_run_button.clicked.connect(self.run_task)
@@ -146,7 +146,7 @@ class MainWindow(QMainWindow):
                 input_dir=self._directory_combo.currentText(), 
                 params=self._task_params
             )
-            self._task.progress.connect(self.update_ui)
+            self._task.progress.connect(self.update_task_progress)
             self._task.status.connect(self.update_status)
             self._task.start()
         else:
@@ -170,7 +170,7 @@ class MainWindow(QMainWindow):
             self._pipeline.run()
         self._pipeline_run_button.setEnabled(True)
 
-    def update_ui(self, progress):
+    def update_task_progress(self, progress):
         self._progress_bar.setValue(progress)
 
     def update_status(self, status):

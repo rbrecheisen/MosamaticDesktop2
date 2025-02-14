@@ -15,7 +15,6 @@ author_email = "ralph.brecheisen@gmail.com"
 formal_name = "Mosamatic Desktop 2"
 description = "Tool for body composition analysis of CT images"
 long_description = """"""
-console = true
 
 sources = [
     "src/models.py",
