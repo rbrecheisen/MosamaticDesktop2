@@ -147,7 +147,7 @@ class MainWindow(QMainWindow):
                 params=self._task_params
             )
             self._task.progress.connect(self.update_task_progress)
-            self._task.status.connect(self.update_status)
+            self._task.status.connect(self.update_task_status)
             self._task.start()
         else:
             QMessageBox.warning(self, 'Input directory', 'No input directory selected')
@@ -173,7 +173,7 @@ class MainWindow(QMainWindow):
     def update_task_progress(self, progress):
         self._progress_bar.setValue(progress)
 
-    def update_status(self, status):
+    def update_task_status(self, status):
         self._task_status.setText(f'Status: {status}')
         if status == 'completed' or status == 'failed' or status == 'canceled':
             self._task_run_button.setEnabled(False)

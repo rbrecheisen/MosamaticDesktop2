@@ -10,6 +10,7 @@ from mosamaticdesktop.utils import LOGGER
 
 class Pipeline(QThread):
     progress = Signal(int)
+    status = Signal(str)
 
     def __init__(self, config_file):
         super(Pipeline, self).__init__()
@@ -22,7 +23,7 @@ class Pipeline(QThread):
             errors.append('Entry "input_dir" missing')
             return errors
         input_dir = config['input_dir']
-        if not os.path.exists(input_dir):
+        if not os.path.exists(self._input_dir):
             errors.append(f'Input directory {input_dir} does not exist')
             return errors
         # Check there are tasks defined in the pipeline                
@@ -62,7 +63,7 @@ class Pipeline(QThread):
             return
         # Get input directory for pipeline and count the number of files
         self._input_dir = config['input_dir']
-        if not self._input_dir:
+        if self._input_dir is None:
             raise RuntimeError(f'Pipeline has no input directory!')
         # Load task instances. When we run tasks through the pipeline the 
         # output directory names will be prepended with an index
