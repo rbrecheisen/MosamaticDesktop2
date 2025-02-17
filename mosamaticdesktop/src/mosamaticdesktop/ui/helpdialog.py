@@ -18,9 +18,12 @@ class HelpDialog(QDialog):
         self._text_browser.setSearchPaths([self._base_path])        
         self._back_button = QPushButton('Back to home', self)
         self._back_button.clicked.connect(lambda: self.load_page("index.html"))
+        self._close_button = QPushButton('Close', self)
+        self._close_button.clicked.connect(self.close)
         layout = QVBoxLayout()
         layout.addWidget(self._back_button)
         layout.addWidget(self._text_browser, 1)
+        layout.addWidget(self._close_button)
         self.setLayout(layout)
         self.load_page('index.html')
 
