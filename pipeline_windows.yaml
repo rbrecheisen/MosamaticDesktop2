@@ -8,7 +8,7 @@ tasks:
   - class: DecompressDicomFilesTask
     input_dir:
     output_dir_name: "decompressdicomfilestask"
-    params:
+    params: # Take from pipeline input directory specified at the top
 
   # Rescales DICOM files to 512 x 512 if needed. If files do not need to be rescaled
   # this task only copies them to the output directory. If they have been rescaled

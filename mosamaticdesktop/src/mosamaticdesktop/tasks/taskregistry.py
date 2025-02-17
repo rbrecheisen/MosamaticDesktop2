@@ -73,7 +73,9 @@ CreatePngsFromSegmentationTask
 ==============================
 Creates PNG images of segmentation files created by MuscleFatSegmentationTask. 
 
-Parameters: None
+Parameters:
+ - Figure width: Width of the figure (default: 10).
+ - Figure height: Height of the figure (default: 10).
 """),
 
     
