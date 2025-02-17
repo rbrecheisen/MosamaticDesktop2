@@ -1,0 +1,46 @@
+# Main input directory for pipeline
+input_dir: "Full path to input directory"
+
+# Tasks to be executed
+tasks:
+
+  # Decompresses DICOM files if needed
+  - class: DecompressDicomFilesTask
+    input_dir:
+    output_dir_name: "decompressdicomfilestask"
+    params: # Take from pipeline input directory specified at the top
+
+  # Rescales DICOM files to 512 x 512 if needed. If files do not need to be rescaled
+  # this task only copies them to the output directory. If they have been rescaled
+  # a text file 'rescaled_files.txt' will be created in the output directory listing
+  # the file paths.
+  - class: RescaleDicomFilesTask
+    input_dir: "Full path to task's input directory"
+    output_dir_name: "rescaledicomfilestask"
+    params:
+      target_size: 512
+
+  # Extracts muscle and fat regions in CT images at L3. Requires specification of the
+  # directory containing the PyTorch model files.
+  - class: MuscleFatSegmentationTask
+    input_dir: "Full path to task's input directory"
+    output_dir_name: "musclefatsegmentationtask"
+    params:
+      model_dir: "Full path to model files directory"
+
+  # Creates PNG images for each segmentation
+  - class: CreatePngsFromSegmentationsTask
+    input_dir: "Full path to task's input directory"
+    output_dir_name: "createpngsfromsegmentationstask"
+    params:
+      fig_width: 10
+      fig_height: 10
+
+  # Calculate body composition metrics for each DICOM file and segmentation. Optionally,
+  # you can provide a CSV file patient heights (two columns: "file" and "height" in meters)
+  - class: CalculateMetricsTask
+    input_dir: "Full path to task's input directory"
+    output_dir_name: "calculatemetricstask"
+    params:
+      image_dir: "Full path to directory containing original, or preprocessed, images"
+      patient_heights_file: "Full path to CSV file with patient heights"
