@@ -20,6 +20,7 @@ class TaskStatus(Enum):
 class Task(QThread):
     progress = Signal(int)
     status = Signal(str)
+    log = Signal(str)
 
     def __init__(self, input_dir, output_dir_name=None, params=None):
         super(Task, self).__init__()
@@ -77,6 +78,21 @@ class Task(QThread):
 
     def cancel(self):
         self._canceled = True
+
+    def log_info(self, message):
+        message = f'[INFO] {message}'
+        LOGGER.info(message)
+        self.log.emit(message)
+
+    def log_warning(self, message):
+        message = f'[WARNING] {message}'
+        LOGGER.warning(message)
+        self.log.emit(message)
+
+    def log_error(self, message):
+        message = f'[ERROR] {message}'
+        LOGGER.error(message)
+        self.log.emit(message)
 
     def set_progress(self, step, nr_steps):
         progress = int(((step + 1) / (nr_steps)) * 100)

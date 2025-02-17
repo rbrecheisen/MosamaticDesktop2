@@ -21,6 +21,7 @@ from mosamaticdesktop.tasks.taskregistry import TASK_REGISTRY
 from mosamaticdesktop.tasks.pipeline import Pipeline
 from mosamaticdesktop.utils import LOGGER
 from mosamaticdesktop.ui.helpdialog import HelpDialog
+from mosamaticdesktop.ui.logdialog import LogDialog
 
 BASE_DIR = str(Path(__file__).resolve().parent.parent)
 RESOURCES_DIR = os.path.join(BASE_DIR, 'resources')
@@ -45,15 +46,21 @@ class MainWindow(QMainWindow):
         self._pipeline_run_button = None
         self._progress_bar = None
         self._task_status = None
+        self._log_dialog = None
         self.init_ui()
 
     def init_ui(self):
         self.setWindowTitle('Mosamatic Desktop 2.0')
         self.setWindowIcon(QIcon(os.path.join(RESOURCES_DIR, 'letter-m.png')))
+        self._log_dialog = LogDialog(self)
         help_action = QAction('Show user manual', self)
         help_action.triggered.connect(self.show_help)
         help_menu = self.menuBar().addMenu('Help')
         help_menu.addAction(help_action)
+        logs_action = QAction('Show logs', self)
+        logs_action.triggered.connect(self.show_logs)
+        logs_menu = self.menuBar().addMenu('Logs')
+        logs_menu.addAction(logs_action)
         widget = QWidget()
         self.setCentralWidget(widget)
         self.init_input_group()
@@ -129,6 +136,9 @@ class MainWindow(QMainWindow):
         help_dialog = HelpDialog()
         help_dialog.show()
 
+    def show_logs(self):
+        self._log_dialog.show()
+
     def select_input_directory(self):
         directory = QFileDialog.getExistingDirectory(self, 'Select directory', dir=BASE_DIR)
         if directory and directory not in [self._directory_combo.itemText(i) for i in range(self._directory_combo.count())]:
@@ -169,6 +179,7 @@ class MainWindow(QMainWindow):
             )
             self._task.progress.connect(self.update_task_progress)
             self._task.status.connect(self.update_task_status)
+            self._task.log.connect(self.update_task_log)
             self._task.start()
         else:
             QMessageBox.warning(self, 'Input directory', 'No input directory selected')
@@ -207,6 +218,9 @@ class MainWindow(QMainWindow):
                 output_dir = self._task.get_output_dir()
                 self._directory_combo.addItem(output_dir)
                 self._directory_combo.setCurrentText(output_dir)
+
+    def update_task_log(self, message):
+        self._log_dialog.append_log(message)
 
     def center_window(self):
         screen = QGuiApplication.primaryScreen().geometry()
