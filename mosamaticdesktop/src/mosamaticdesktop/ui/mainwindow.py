@@ -14,12 +14,13 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QProgressBar,
 )
-from PySide6.QtGui import QGuiApplication, QIcon
+from PySide6.QtGui import QGuiApplication, QIcon, QAction
 from PySide6.QtCore import QOperatingSystemVersion
 
 from mosamaticdesktop.tasks.taskregistry import TASK_REGISTRY
 from mosamaticdesktop.tasks.pipeline import Pipeline
 from mosamaticdesktop.utils import LOGGER
+from mosamaticdesktop.ui.helpdialog import HelpDialog
 
 BASE_DIR = str(Path(__file__).resolve().parent.parent)
 RESOURCES_DIR = os.path.join(BASE_DIR, 'resources')
@@ -49,6 +50,10 @@ class MainWindow(QMainWindow):
     def init_ui(self):
         self.setWindowTitle('Mosamatic Desktop 2.0')
         self.setWindowIcon(QIcon(os.path.join(RESOURCES_DIR, 'letter-m.png')))
+        help_action = QAction('Show user manual', self)
+        help_action.triggered.connect(self.show_help)
+        help_menu = self.menuBar().addMenu('Help')
+        help_menu.addAction(help_action)
         widget = QWidget()
         self.setCentralWidget(widget)
         self.init_input_group()
@@ -119,6 +124,10 @@ class MainWindow(QMainWindow):
         pipeline_group_layout.addWidget(self._pipeline_config_label)
         pipeline_group_layout.addWidget(self._pipeline_run_button)
         self._pipeline_group.setLayout(pipeline_group_layout)
+
+    def show_help(self):
+        help_dialog = HelpDialog()
+        help_dialog.exec()
 
     def select_input_directory(self):
         directory = QFileDialog.getExistingDirectory(self, 'Select directory', dir=BASE_DIR)
