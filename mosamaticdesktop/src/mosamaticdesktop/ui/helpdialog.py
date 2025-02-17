@@ -1,6 +1,6 @@
 import os
 
-from PySide6.QtWidgets import QDialog, QVBoxLayout, QTextBrowser
+from PySide6.QtWidgets import QDialog, QVBoxLayout, QTextBrowser, QPushButton
 from PySide6.QtCore import QFile, QTextStream, QUrl
 
 
@@ -16,7 +16,10 @@ class HelpDialog(QDialog):
         self._text_browser.setOpenExternalLinks(True)
         self._text_browser.anchorClicked.connect(self.handle_link)
         self._text_browser.setSearchPaths([self._base_path])        
+        self._back_button = QPushButton('Back to home', self)
+        self._back_button.clicked.connect(lambda: self.load_page("index.html"))
         layout = QVBoxLayout()
+        layout.addWidget(self._back_button)
         layout.addWidget(self._text_browser, 1)
         self.setLayout(layout)
         self.load_page('index.html')
