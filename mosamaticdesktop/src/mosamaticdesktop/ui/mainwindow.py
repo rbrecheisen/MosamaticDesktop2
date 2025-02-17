@@ -32,6 +32,7 @@ class MainWindow(QMainWindow):
         self._task_params = None
         self._pipeline = None
         self._directory_combo = None 
+        self._task_info_label = None
         self._tasks_combo = None
         self._task_run_button = None
         self._task_cancel_button = None
@@ -81,8 +82,11 @@ class MainWindow(QMainWindow):
     def init_tasks_group(self):
         self._tasks_group = QGroupBox('Tasks')
         self._tasks_combo = QComboBox()
+        self._tasks_combo.addItem(None)
         self._tasks_combo.addItems(TASK_REGISTRY.keys())
         self._tasks_combo.setEditable(False)
+        self._tasks_combo.currentTextChanged.connect(self.task_selected)
+        self._task_info_label = QLabel('', self)
         self._task_params_button = QPushButton('Set task parameters', self)
         self._task_params_button.clicked.connect(self.set_task_params)
         self._task_run_button = QPushButton('Run task', self)
@@ -95,6 +99,7 @@ class MainWindow(QMainWindow):
         self._task_status = QLabel('Status: idle')
         tasks_group_layout = QVBoxLayout()
         tasks_group_layout.addWidget(self._tasks_combo)
+        tasks_group_layout.addWidget(self._task_info_label)
         tasks_group_layout.addWidget(self._task_params_button)
         tasks_group_layout.addWidget(self._task_run_button)
         tasks_group_layout.addWidget(self._task_cancel_button)
@@ -123,6 +128,12 @@ class MainWindow(QMainWindow):
         else:
             pass
 
+    def task_selected(self, text):
+        if text is None or text == '':
+            return
+        selected_key = TASK_REGISTRY[text]
+        self._task_info_label.setText(selected_key[2])
+
     def set_task_params(self):
         self._task_params = None
         task_name = self._tasks_combo.currentText()
@@ -140,6 +151,7 @@ class MainWindow(QMainWindow):
         if input_dir and input_dir != '':
             self._progress_bar.setValue(0)
             self._task_params_button.setEnabled(False)
+            self._task_run_button.setEnabled(False)
             self._task_cancel_button.setEnabled(True)
             task_name = self._tasks_combo.currentText()
             self._task = TASK_REGISTRY[task_name][0](
@@ -155,6 +167,9 @@ class MainWindow(QMainWindow):
     def cancel_task(self):
         if self._task is not None:
             self._task.cancel()
+        self._task_params_button.setEnabled(True)
+        self._task_run_button.setEnabled(True)
+        self._task_cancel_button.setEnabled(False)
 
     def load_pipeline_config(self):
         file_path, _ = QFileDialog.getOpenFileName(self, 'Open pipeline config', dir=BASE_DIR)
