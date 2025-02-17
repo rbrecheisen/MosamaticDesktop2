@@ -33,7 +33,7 @@ class MainWindow(QMainWindow):
         self._task_params = None
         self._pipeline = None
         self._directory_combo = None 
-        self._task_info_label = None
+        # self._task_info_label = None
         self._tasks_combo = None
         self._task_run_button = None
         self._task_cancel_button = None
@@ -90,8 +90,8 @@ class MainWindow(QMainWindow):
         self._tasks_combo.addItem(None)
         self._tasks_combo.addItems(TASK_REGISTRY.keys())
         self._tasks_combo.setEditable(False)
-        self._tasks_combo.currentTextChanged.connect(self.task_selected)
-        self._task_info_label = QLabel('', self)
+        # self._tasks_combo.currentTextChanged.connect(self.task_selected)
+        # self._task_info_label = QLabel('', self)
         self._task_params_button = QPushButton('Set task parameters', self)
         self._task_params_button.clicked.connect(self.set_task_params)
         self._task_run_button = QPushButton('Run task', self)
@@ -104,7 +104,7 @@ class MainWindow(QMainWindow):
         self._task_status = QLabel('Status: idle')
         tasks_group_layout = QVBoxLayout()
         tasks_group_layout.addWidget(self._tasks_combo)
-        tasks_group_layout.addWidget(self._task_info_label)
+        # tasks_group_layout.addWidget(self._task_info_label)
         tasks_group_layout.addWidget(self._task_params_button)
         tasks_group_layout.addWidget(self._task_run_button)
         tasks_group_layout.addWidget(self._task_cancel_button)
@@ -127,7 +127,7 @@ class MainWindow(QMainWindow):
 
     def show_help(self):
         help_dialog = HelpDialog()
-        help_dialog.exec()
+        help_dialog.show()
 
     def select_input_directory(self):
         directory = QFileDialog.getExistingDirectory(self, 'Select directory', dir=BASE_DIR)
@@ -137,11 +137,11 @@ class MainWindow(QMainWindow):
         else:
             pass
 
-    def task_selected(self, text):
-        if text is None or text == '':
-            return
-        selected_key = TASK_REGISTRY[text]
-        self._task_info_label.setText(selected_key[2])
+    # def task_selected(self, text):
+    #     if text is None or text == '':
+    #         return
+    #     selected_key = TASK_REGISTRY[text]
+    #     self._task_info_label.setText(selected_key[2])
 
     def set_task_params(self):
         self._task_params = None
