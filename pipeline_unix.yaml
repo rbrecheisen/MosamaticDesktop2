@@ -20,6 +20,8 @@ tasks:
     output_dir_name: "musclefatsegmentationl3task"
     params:
       clean_output: True
+      model_type: "tensorflow"
+      model_version: 1.0
       model_dir: "/Users/ralph/Desktop/downloads/pytorchmodelfiles"
 
   - class: CreatePngsFromSegmentationsTask

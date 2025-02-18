@@ -10,12 +10,19 @@ class TensorFlowModel:
     def __init__(self):
         pass
 
-    def load(self, model_dir):
+    def load(self, model_dir, model_version):
+        # Check if correct model version files exist
+        for model_file_name in ['model.zip', 'contour_model.zip', 'params.json']:
+            items = os.path.splitext(model_file_name)
+            model_file_name_with_version = f'{items[0]}-{str(model_version)}{items[1]}'
+            model_file_path_with_version = os.path.join(model_dir, model_file_name_with_version)
+            if not os.path.exists(model_file_path_with_version):
+                raise RuntimeError(f'Model file {model_file_path_with_version} does not exist')
         tfLoaded = False
         model, contour_model, params = None, None, None
         for f in os.listdir(model_dir):
             f_path = os.path.join(model_dir, f)
-            if f == 'model.zip':
+            if f == f'model-{str(model_version)}.zip':
                 if not tfLoaded:
                     import tensorflow as tf # Only load TensorFlow package if necessary (takes some time)
                     tfLoaded = True
@@ -24,7 +31,7 @@ class TensorFlowModel:
                 with zipfile.ZipFile(f_path) as zipObj:
                     zipObj.extractall(path=model_dir_unzipped)
                 model = tf.keras.models.load_model(model_dir_unzipped, compile=False)
-            elif f == 'contour_model.zip':
+            elif f == f'contour_model-{str(model_version)}.zip':
                 if not tfLoaded:
                     import tensorflow as tf # Only load TensorFlow package if necessary (takes some time)
                     tfLoaded = True
@@ -33,7 +40,7 @@ class TensorFlowModel:
                 with zipfile.ZipFile(f_path) as zipObj:
                     zipObj.extractall(path=contour_model_dir_unzipped)
                 contour_model = tf.keras.models.load_model(contour_model_dir_unzipped, compile=False)
-            elif f == 'params.json':
+            elif f == f'params-{model_version}.json':
                 with open(f_path, 'r') as f:
                     params = json.load(f)
             else:

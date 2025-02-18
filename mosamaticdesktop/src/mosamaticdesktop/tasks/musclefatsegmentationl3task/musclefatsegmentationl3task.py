@@ -11,14 +11,14 @@ class MuscleFatSegmentationL3Task(Task):
     def __init__(self, input_dir, output_dir_name=None, params=None):
         super(MuscleFatSegmentationL3Task, self).__init__(input_dir, output_dir_name, params)
 
-    def load_model_files(self, model_dir, model_type):
+    def load_model_files(self, model_dir, model_type, model_version):
         if model_type == 'torch':
             torch_model = TorchModel()
-            model, contour_model, params = torch_model.load(model_dir)
+            model, contour_model, params = torch_model.load(model_dir, model_version)
             return model, contour_model, params
         elif model_type == 'tensorflow':
             tensorflow_model = TensorFlowModel()
-            model, contour_model, params = tensorflow_model.load(model_dir)
+            model, contour_model, params = tensorflow_model.load(model_dir, model_version)
             return model, contour_model, params
         else:
             pass
@@ -67,7 +67,10 @@ class MuscleFatSegmentationL3Task(Task):
             self.set_status(TaskStatus.FAILED, message='Model directory not found')
         model_type = self.get_param('model_type', 'torch')
         self.log_info(f'Using model type: {model_type}')
-        model, contour_model, params = self.load_model_files(model_dir, model_type)
+        model_version = self.get_param('model_version', None)
+        if model_version is None:
+            self.set_status(TaskStatus.FAILED, message='Model version not specified')
+        model, contour_model, params = self.load_model_files(model_dir, model_type, model_version)
         if model is None or params is None:
             self.set_status(TaskStatus.FAILED, message='Model or parameters could not be loaded')
         files = os.listdir(self.get_input_dir())

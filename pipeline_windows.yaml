@@ -29,10 +29,11 @@ tasks:
     output_dir_name: "musclefatsegmentationl3task"
     params:
       clean_output: True
-      # model_type: "torch"
-      model_type: "tensorflow"
-      # model_dir: "D:\\Mosamatic\\PyTorchModelFiles"
-      model_dir: "D:\\Mosamatic\\TensorFlowModelFiles"
+      model_type: "torch"
+      # model_type: "tensorflow"
+      model_version: 1.0
+      model_dir: "D:\\Mosamatic\\PyTorchModelFiles"
+      # model_dir: "D:\\Mosamatic\\TensorFlowModelFiles"
 
   # Creates PNG images for each segmentation
   - class: CreatePngsFromSegmentationsTask

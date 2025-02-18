@@ -30,6 +30,7 @@ tasks:
     params:
       clean_output: True
       model_type: "Model type (options: torch|tensorflow)"
+      model_version: 1.0
       model_dir: "Full path to model files directory"
 
   # Creates PNG images for each segmentation

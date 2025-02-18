@@ -14,20 +14,27 @@ class TorchModel:
     def __init__(self):
         pass
 
-    def load(self, model_dir):
+    def load(self, model_dir, model_version):
+        # Check if correct model version files exist
+        for model_file_name in ['model.pth', 'contour_model.pth', 'params.json']:
+            items = os.path.splitext(model_file_name)
+            model_file_name_with_version = f'{items[0]}-{str(model_version)}{items[1]}'
+            model_file_path_with_version = os.path.join(model_dir, model_file_name_with_version)
+            if not os.path.exists(model_file_path_with_version):
+                raise RuntimeError(f'Model file {model_file_path_with_version} does not exist')
         model, contour_model, params = None, None, None
         for f in os.listdir(model_dir):
             f_path = os.path.join(model_dir, f)
             with torch.serialization.safe_globals([UNet, MaxPool2d, Sequential, Conv2d, PReLU, BatchNorm2d, Dropout, ConvTranspose2d]):
-                if f.startswith('model'):
+                if f == f'model-{str(model_version)}.pth':
                     model = torch.load(f_path, map_location=torch.device('cpu'))
                     model.to('cpu')
                     model.eval()
-                elif f.startswith('contour_model'):
+                elif f == f'contour_model-{str(model_version)}.pth':
                     contour_model = torch.load(f_path, map_location=torch.device('cpu'))
                     contour_model.to('cpu')
                     contour_model.eval()
-                elif f == 'params.json':
+                elif f == f'params-{str(model_version)}.json':
                     with open(f_path, 'r') as obj:
                         params = json.load(obj)
                 else:
