@@ -20,9 +20,11 @@ tasks:
     output_dir_name: "musclefatsegmentationl3task"
     params:
       clean_output: True
+      # model_type: "torch"
       model_type: "tensorflow"
       model_version: 1.0
-      model_dir: "/Users/ralph/Desktop/downloads/pytorchmodelfiles"
+      # model_dir: "/Users/ralph/Desktop/downloads/pytorchmodelfiles"
+      model_dir: "/Users/ralph/Desktop/downloads/tensorflowmodelfiles"
 
   - class: CreatePngsFromSegmentationsTask
     input_dir: "/Users/ralph/Desktop/downloads/mosamaticdesktop/musclefatsegmentationl3task"
@@ -38,4 +40,4 @@ tasks:
     params:
       clean_output: True
       image_dir: "/Users/ralph/Desktop/downloads/mosamaticdesktop/rescaledicomfilestask"
-      patient_heights_file: "/Users/ralph/Desktop/downloads/mosamaticdesktop/patient_heights.csv"
+      patient_heights_file:
