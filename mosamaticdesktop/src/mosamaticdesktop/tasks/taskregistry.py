@@ -4,8 +4,8 @@ from mosamaticdesktop.tasks.decompressdicomfilestask import DecompressDicomFiles
 from mosamaticdesktop.tasks.decompressdicomfilestaskdialog import DecompressDicomFilesTaskDialog
 from mosamaticdesktop.tasks.rescaledicomfilestask import RescaleDicomFilesTask
 from mosamaticdesktop.tasks.rescaledicomfilestaskdialog import RescaleDicomFilesTaskDialog
-from mosamaticdesktop.tasks.musclefatsegmentationtask import MuscleFatSegmentationTask
-from mosamaticdesktop.tasks.musclefatsegmentationtaskdialog import MuscleFatSegmentationTaskDialog
+from mosamaticdesktop.tasks.musclefatsegmentationl3task import MuscleFatSegmentationL3Task
+from mosamaticdesktop.tasks.musclefatsegmentationl3taskdialog import MuscleFatSegmentationL3TaskDialog
 from mosamaticdesktop.tasks.createpngsfromsegmentationstask import CreatePngsFromSegmentationsTask
 from mosamaticdesktop.tasks.createpngsfromsegmentationstaskdialog import CreatePngsFromSegmentationsTaskDialog
 from mosamaticdesktop.tasks.calculatemetricstask import CalculateMetricsTask
@@ -53,12 +53,12 @@ Parameters:
 """),
 
     
-    'MuscleFatSegmentationTask': (
-        MuscleFatSegmentationTask, 
-        MuscleFatSegmentationTaskDialog, """
-MuscleFatSegmentationTask
+    'MuscleFatSegmentationL3Task': (
+        MuscleFatSegmentationL3Task, 
+        MuscleFatSegmentationL3TaskDialog, """
+MuscleFatSegmentationL3Task
 =========================
-Runs automatic segmentation of muscle and fat on the DICOM images. Requires
+Runs automatic segmentation of muscle and fat on the L3 images. Requires
 loading the AI model files in the task parameters dialog. 
 
 Parameters:
@@ -71,7 +71,7 @@ Parameters:
         CreatePngsFromSegmentationsTaskDialog, """
 CreatePngsFromSegmentationTask
 ==============================
-Creates PNG images of segmentation files created by MuscleFatSegmentationTask. 
+Creates PNG images of segmentation files created by MuscleFatSegmentationL3Task. 
 
 Parameters:
  - Figure width: Width of the figure (default: 10).
@@ -85,7 +85,7 @@ Parameters:
 CalculateMetricsTask
 ====================
 Calculate a number of body composition metrics from the muscle and fat regions
-segmented by the MuscleFatSegmentationTask. Requires loading of the original 
+segmented by the MuscleFatSegmentationL3Task. Requires loading of the original 
 DICOM images as well, probably the output images of the DecompressDicomFilesTask or
 RescaleDicomFilesTask. These images can be loaded in the task parameters dialog.
 

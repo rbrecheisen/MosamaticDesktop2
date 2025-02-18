@@ -3,9 +3,9 @@ from PySide6.QtWidgets import QPushButton, QFileDialog, QLabel, QVBoxLayout
 from mosamaticdesktop.tasks.taskdialog import TaskDialog
 
 
-class MuscleFatSegmentationTaskDialog(TaskDialog):
+class MuscleFatSegmentationL3TaskDialog(TaskDialog):
     def __init__(self, parent=None):
-        super(MuscleFatSegmentationTaskDialog, self).__init__(parent)
+        super(MuscleFatSegmentationL3TaskDialog, self).__init__(parent)
         self._model_dir = None
         self._open_model_dir_button = QPushButton('Open model directory', self)
         self._open_model_dir_button.clicked.connect(self.open_model_directory)

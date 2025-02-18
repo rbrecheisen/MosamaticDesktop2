@@ -14,12 +14,12 @@ from mosamaticdesktop.utils import (
 )
 
 
-class MuscleFatSegmentationTask(Task):
+class MuscleFatSegmentationL3Task(Task):
     def __init__(self, input_dir, output_dir_name=None, params=None):
-        super(MuscleFatSegmentationTask, self).__init__(input_dir, output_dir_name, params)
+        super(MuscleFatSegmentationL3Task, self).__init__(input_dir, output_dir_name, params)
 
     def load_model_files(self, model_dir):
-        LOGGER.info('MuscleFatSegmentationTask.load_model_files()')
+        LOGGER.info('MuscleFatSegmentationL3Task.load_model_files()')
         # start_time_total = current_time_in_seconds()
         model, contour_model, params = None, None, None
         for f in os.listdir(model_dir):
@@ -76,7 +76,7 @@ class MuscleFatSegmentationTask(Task):
         return mask
 
     def process_file(self, f_path, output_dir, model, contour_model, params):
-        LOGGER.info(f'MuscleFatSegmentationTask.process_file(): {f_path}')
+        LOGGER.info(f'MuscleFatSegmentationL3Task.process_file(): {f_path}')
         # start_time_total = current_time_in_seconds()
         # start_time_predict_contour = current_time_in_seconds()
         p = load_dicom(f_path)
