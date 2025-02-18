@@ -1,11 +1,14 @@
-from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QPushButton
+from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QCheckBox
 
 
 class TaskDialog(QDialog):
     def __init__(self, parent=None):
         super(TaskDialog, self).__init__(parent)
         self.setWindowTitle(self.__class__.__name__)
-        self._params = None
+        self._params = {'clean_output': True}
+        self._clean_output_checkbox = QCheckBox('Clean output', self)
+        self._clean_output_checkbox.toggled.connect(self.handle_checkbox)
+        self._clean_output_checkbox.setChecked(True)
         self._save_button = QPushButton('Save', self)
         self._save_button.clicked.connect(self.accept)
         self._cancel_button = QPushButton('Cancel', self)
@@ -19,6 +22,7 @@ class TaskDialog(QDialog):
         content_layout = self.get_content_layout()
         if content_layout:
             layout.addLayout(self.get_content_layout())
+        layout.addWidget(self._clean_output_checkbox)
         layout.addLayout(self._button_layout)
         self.setLayout(layout)
 
@@ -29,8 +33,8 @@ class TaskDialog(QDialog):
         raise NotImplementedError('Implement in child dialog')
     
     def set_param(self, name, value):
-        if self._params is None:
-            self._params = {}
+        # if self._params is None:
+        #     self._params = {}
         self._params[name] = value
     
     def accept(self):
@@ -40,6 +44,9 @@ class TaskDialog(QDialog):
     def reject(self):
         self._params = None
         super(TaskDialog, self).reject()
+
+    def handle_checkbox(self, checked):
+        self._params['clean_output'] = checked
 
     def get_params(self):
         return self._params

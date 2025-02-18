@@ -3,6 +3,7 @@ pendulum
 pytest
 pyside6
 pydicom
+python-gdcm
 numpy
 pillow
 torch
