@@ -23,7 +23,7 @@ class Pipeline(QThread):
             errors.append('Entry "input_dir" missing')
             return errors
         input_dir = config['input_dir']
-        if not os.path.exists(self._input_dir):
+        if not os.path.exists(input_dir):
             errors.append(f'Input directory {input_dir} does not exist')
             return errors
         # Check there are tasks defined in the pipeline                
@@ -70,7 +70,7 @@ class Pipeline(QThread):
         self._tasks = []
         for task_config in config['tasks']:
             class_name = task_config['class']
-            module_name = f'mosamaticdesktop.tasks.{class_name.lower()}'
+            module_name = f'mosamaticdesktop.tasks.{class_name.lower()}.{class_name.lower()}'
             input_dir = task_config['input_dir']
             # The first task may not have an input directory. In that case, take the main
             # pipeline input directory

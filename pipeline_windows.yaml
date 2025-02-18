@@ -22,15 +22,16 @@ tasks:
 
   # Extracts muscle and fat regions in CT images at L3. Requires specification of the
   # directory containing the PyTorch model files.
-  - class: MuscleFatSegmentationTask
+  - class: MuscleFatSegmentationL3Task
     input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\rescaledicomfilestask"
-    output_dir_name: "musclefatsegmentationtask"
+    output_dir_name: "musclefatsegmentationl3task"
     params:
+      model_type: "torch"
       model_dir: "D:\\Mosamatic\\PyTorchModelFiles"
 
   # Creates PNG images for each segmentation
   - class: CreatePngsFromSegmentationsTask
-    input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\musclefatsegmentationtask"
+    input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\musclefatsegmentationl3task"
     output_dir_name: "createpngsfromsegmentationstask"
     params:
       fig_width: 10
@@ -39,7 +40,7 @@ tasks:
   # Calculate body composition metrics for each DICOM file and segmentation. Optionally,
   # you can provide a CSV file patient heights (two columns: "file" and "height" in meters)
   - class: CalculateMetricsTask
-    input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\musclefatsegmentationtask"
+    input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\musclefatsegmentationl3task"
     output_dir_name: "calculatemetricstask"
     params:
       image_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\rescaledicomfilestask"

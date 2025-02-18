@@ -22,10 +22,11 @@ tasks:
 
   # Extracts muscle and fat regions in CT images at L3. Requires specification of the
   # directory containing the PyTorch model files.
-  - class: MuscleFatSegmentationTask
+  - class: MuscleFatSegmentationL3Task
     input_dir: "Full path to task's input directory"
-    output_dir_name: "musclefatsegmentationtask"
+    output_dir_name: "musclefatsegmentationl3task"
     params:
+      model_type: "Model type (options: torch|tensorflow)"
       model_dir: "Full path to model files directory"
 
   # Creates PNG images for each segmentation

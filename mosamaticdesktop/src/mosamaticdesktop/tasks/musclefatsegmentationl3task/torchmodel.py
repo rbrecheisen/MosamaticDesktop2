@@ -4,23 +4,20 @@ import torch
 import cv2
 import numpy as np
 
+from models import UNet
 from torch.nn import MaxPool2d, Sequential, Conv2d, PReLU, BatchNorm2d, Dropout, ConvTranspose2d
 
-from models import UNet
-from mosamaticdesktop.tasks.task import Task, TaskStatus
 from mosamaticdesktop.utils import (
     get_pixels_from_dicom_object, normalize_between, convert_labels_to_157,
     current_time_in_seconds, elapsed_time_in_seconds, load_dicom, LOGGER
 )
 
 
-class MuscleFatSegmentationL3Task(Task):
-    def __init__(self, input_dir, output_dir_name=None, params=None):
-        super(MuscleFatSegmentationL3Task, self).__init__(input_dir, output_dir_name, params)
+class TorchModel:
+    def __init__(self):
+        pass
 
-    def load_model_files(self, model_dir):
-        LOGGER.info('MuscleFatSegmentationL3Task.load_model_files()')
-        # start_time_total = current_time_in_seconds()
+    def load(self, model_dir):
         model, contour_model, params = None, None, None
         for f in os.listdir(model_dir):
             f_path = os.path.join(model_dir, f)
@@ -48,10 +45,10 @@ class MuscleFatSegmentationL3Task(Task):
         # print(f'load_model_files() Elapsed total: {elapsed_time_total}')
         return model, contour_model, params
 
-    def predict_contour(self, contour_model, img, params) -> np.array:
+    def predict_contour(self, image, contour_model, params):
         # start_time_total = current_time_in_seconds()
         # start_time_normalization = current_time_in_seconds()
-        ct = np.copy(img)
+        ct = np.copy(image)
         ct = normalize_between(ct, params['min_bound_contour'], params['max_bound_contour'])
         # elapsed_time_normalization = elapsed_time_in_seconds(start_time_normalization)
         # print(f'predict_contour() Elapsed time normalization: {elapsed_time_normalization}')        
@@ -75,24 +72,9 @@ class MuscleFatSegmentationL3Task(Task):
         # print(f'predict_contour() Elapsed time total: {elapsed_time_total}')
         return mask
 
-    def process_file(self, f_path, output_dir, model, contour_model, params):
-        LOGGER.info(f'MuscleFatSegmentationL3Task.process_file(): {f_path}')
-        # start_time_total = current_time_in_seconds()
-        # start_time_predict_contour = current_time_in_seconds()
-        p = load_dicom(f_path)
-        if p is None:
-            LOGGER.info(f'File {f_path} is not valid DICOM, skipping...')
-            return
-        img1 = get_pixels_from_dicom_object(p, normalize=True)
-        if contour_model:
-            mask = self.predict_contour(contour_model, img1, params)
-            img1 = normalize_between(img1, params['min_bound'], params['max_bound'])
-            img1 = img1 * mask
-        img1 = img1.astype(np.float32)
-        # elapsed_time_predict_contour = elapsed_time_in_seconds(start_time_predict_contour)
-        # print(f'process_file() Elapsed time predict contour: {elapsed_time_predict_contour}')
+    def predict(self, model, image):
         # start_time_upload_tensor = current_time_in_seconds()
-        img1_tensor = torch.tensor(img1, dtype=torch.float32).unsqueeze(0).to('cpu')
+        img1_tensor = torch.tensor(image, dtype=torch.float32).unsqueeze(0).to('cpu')
         # elapsed_time_upload_tensor = elapsed_time_in_seconds(start_time_upload_tensor)
         # print(f'process_file() Elapsed time upload tensor: {elapsed_time_upload_tensor}')
         # start_time_predict = current_time_in_seconds()
@@ -100,36 +82,4 @@ class MuscleFatSegmentationL3Task(Task):
             pred = model(img1_tensor).cpu().numpy()
         pred_squeeze = np.squeeze(pred)
         pred_max = pred_squeeze.argmax(axis=0)
-        pred_max = convert_labels_to_157(pred_max)
-        # elapsed_time_predict = elapsed_time_in_seconds(start_time_predict)
-        # print(f'process_file() Elapsed time predict: {elapsed_time_predict}')
-        segmentation_file_name = os.path.split(f_path)[1]
-        segmentation_file_path = os.path.join(output_dir, f'{segmentation_file_name}.seg.npy')
-        np.save(segmentation_file_path, pred_max)
-        # elapsed_time_total = elapsed_time_in_seconds(start_time_total)
-        # print(f'process_file() Elapsed time total: {elapsed_time_total}')
-
-    def execute(self):
-        # Load PyTorch models and parameters
-        model_dir = self.get_param('model_dir', None)
-        if not model_dir:
-            self.set_status(TaskStatus.FAILED, message='Model directory not found')
-        model, contour_model, params = self.load_model_files(model_dir)
-        if model is None or params is None:
-            self.set_status(TaskStatus.FAILED, message='Model or parameters could not be loaded')
-        # Process DICOM files (use CopyDicomFilesTask to ensure input directory with only DICOM)
-        files = os.listdir(self.get_input_dir())
-        nr_steps = len(files)
-        for step in range(nr_steps):
-            if self.is_canceled():
-                self.set_status(TaskStatus.CANCELED)
-                return 
-            
-            f = files[step]
-            f_path = os.path.join(self.get_input_dir(), f)
-            # Load DICOM image (assumes decompressed if needed, use CopyDicomFilesTask for this with 'decompressed' = true)
-            # We also assume the images have dimensions 512 x 512. You can ensure this by first running the RescaleDicomFilesTask
-            # with 'rows' = 512 and 'cols' = 512.
-            self.process_file(f_path, self.get_output_dir(), model, contour_model, params)
-            # Update progress
-            self.set_progress(step, nr_steps)
+        return pred_max
