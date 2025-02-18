@@ -65,15 +65,15 @@ class Task(QThread):
     def run(self):
         self.set_status(TaskStatus.RUNNING)
         try:
-            LOGGER.info(f'Input directory: {self.get_input_dir()}')
-            LOGGER.info(f'Output directory: {self.get_output_dir()}')
-            LOGGER.info('Parameters:')
-            LOGGER.info(json.dumps(self.get_params(), indent=2))
+            self.log_info(f'Input directory: {self.get_input_dir()}')
+            self.log_info(f'Output directory: {self.get_output_dir()}')
+            self.log_info('Parameters:')
+            self.log_info(json.dumps(self.get_params(), indent=2))
             self.execute()
             if not self.is_canceled():
                 self.set_status(TaskStatus.COMPLETED)
         except Exception as e:
-            LOGGER.info(f'ERROR: Task failed ({e})')
+            self.log_error(f'ERROR: Task failed ({e})')
             self.set_status(TaskStatus.FAILED)
 
     def cancel(self):
@@ -96,11 +96,11 @@ class Task(QThread):
 
     def set_progress(self, step, nr_steps):
         progress = int(((step + 1) / (nr_steps)) * 100)
-        LOGGER.info(f'Progress task {self.__class__.__name__}: {progress}')
+        self.log_info(f'Progress task {self.__class__.__name__}: {progress}')
         self.progress.emit(progress)
 
     def set_status(self, status, message=None):
         if not message:
             message = ''
-        LOGGER.info(f'Status task {self.__class__.__name__}: {status.value} ({message})')
+        self.log_info(f'Status task {self.__class__.__name__}: {status.value} ({message})')
         self.status.emit(status.value)

@@ -12,10 +12,12 @@ class Pipeline(QThread):
     progress = Signal(int)
     status = Signal(str)
 
-    def __init__(self, config_file):
+    def __init__(self, config_file, main_window=None):
         super(Pipeline, self).__init__()
         self._input_dir, self._tasks = None, []
         self.load_config(config_file)
+        self._main_window = main_window
+        self._current_task_index = 0
 
     def check_config(self, config):
         errors = []
@@ -86,7 +88,20 @@ class Pipeline(QThread):
 
     def run(self):
         for step in range(len(self._tasks)):
-            self._tasks[step].run()
+            if self._main_window:
+                self._tasks[step].log.connect(self._main_window.update_task_log)
+                self._tasks[step].finished.connect(self.run_next_task) # Let task notify listeners that it's finished before moving on to next task
+            else:
+                self._tasks[step].run()
+        if self._main_window:
+            self._current_task_index = 0
+            self.run_next_task()
+
+    def run_next_task(self):
+        if self._current_task_index < len(self._tasks):
+            task = self._tasks[self._current_task_index]
+            self._current_task_index += 1
+            task.start()
 
     def update_input_dir(self, input_dir):
         self._input_dir = input_dir

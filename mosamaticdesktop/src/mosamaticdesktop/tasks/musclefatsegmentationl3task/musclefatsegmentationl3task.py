@@ -1,19 +1,10 @@
 import os
-import json
-import torch
-import cv2
 import numpy as np
 
-from torch.nn import MaxPool2d, Sequential, Conv2d, PReLU, BatchNorm2d, Dropout, ConvTranspose2d
-
-from models import UNet
 from mosamaticdesktop.tasks.task import Task, TaskStatus
 from mosamaticdesktop.tasks.musclefatsegmentationl3task.torchmodel import TorchModel
 from mosamaticdesktop.tasks.musclefatsegmentationl3task.tensorflowmodel import TensorFlowModel
-from mosamaticdesktop.utils import (
-    get_pixels_from_dicom_object, normalize_between, convert_labels_to_157,
-    current_time_in_seconds, elapsed_time_in_seconds, load_dicom, LOGGER
-)
+from mosamaticdesktop.utils import get_pixels_from_dicom_object, normalize_between, convert_labels_to_157, load_dicom
 
 
 class MuscleFatSegmentationL3Task(Task):
@@ -49,7 +40,7 @@ class MuscleFatSegmentationL3Task(Task):
     def process_file(self, f_path, output_dir, model, contour_model, params, model_type):
         p = load_dicom(f_path)
         if p is None:
-            LOGGER.info(f'File {f_path} is not valid DICOM, skipping...')
+            self.log_info(f'File {f_path} is not valid DICOM, skipping...')
             return
         img1 = get_pixels_from_dicom_object(p, normalize=True)        
         if contour_model:
@@ -75,6 +66,7 @@ class MuscleFatSegmentationL3Task(Task):
         if not model_dir:
             self.set_status(TaskStatus.FAILED, message='Model directory not found')
         model_type = self.get_param('model_type', 'torch')
+        self.log_info(f'Using model type: {model_type}')
         model, contour_model, params = self.load_model_files(model_dir, model_type)
         if model is None or params is None:
             self.set_status(TaskStatus.FAILED, message='Model or parameters could not be loaded')

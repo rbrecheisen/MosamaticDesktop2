@@ -25,3 +25,4 @@ class LogDialog(QDialog):
 
     def append_log(self, message):
         self._text_panel.append(message)
+        self._text_panel.verticalScrollBar().setValue(self._text_panel.verticalScrollBar().maximum())

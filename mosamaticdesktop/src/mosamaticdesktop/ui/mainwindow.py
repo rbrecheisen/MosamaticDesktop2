@@ -34,7 +34,6 @@ class MainWindow(QMainWindow):
         self._task_params = None
         self._pipeline = None
         self._directory_combo = None 
-        # self._task_info_label = None
         self._tasks_combo = None
         self._task_run_button = None
         self._task_cancel_button = None
@@ -97,8 +96,6 @@ class MainWindow(QMainWindow):
         self._tasks_combo.addItem(None)
         self._tasks_combo.addItems(TASK_REGISTRY.keys())
         self._tasks_combo.setEditable(False)
-        # self._tasks_combo.currentTextChanged.connect(self.task_selected)
-        # self._task_info_label = QLabel('', self)
         self._task_params_button = QPushButton('Set task parameters', self)
         self._task_params_button.clicked.connect(self.set_task_params)
         self._task_run_button = QPushButton('Run task', self)
@@ -111,7 +108,6 @@ class MainWindow(QMainWindow):
         self._task_status = QLabel('Status: idle')
         tasks_group_layout = QVBoxLayout()
         tasks_group_layout.addWidget(self._tasks_combo)
-        # tasks_group_layout.addWidget(self._task_info_label)
         tasks_group_layout.addWidget(self._task_params_button)
         tasks_group_layout.addWidget(self._task_run_button)
         tasks_group_layout.addWidget(self._task_cancel_button)
@@ -146,12 +142,6 @@ class MainWindow(QMainWindow):
             self._directory_combo.setCurrentText(directory)
         else:
             pass
-
-    # def task_selected(self, text):
-    #     if text is None or text == '':
-    #         return
-    #     selected_key = TASK_REGISTRY[text]
-    #     self._task_info_label.setText(selected_key[2])
 
     def set_task_params(self):
         self._task_params = None
@@ -194,7 +184,7 @@ class MainWindow(QMainWindow):
     def load_pipeline_config(self):
         file_path, _ = QFileDialog.getOpenFileName(self, 'Open pipeline config', dir=BASE_DIR)
         if file_path and file_path.endswith('.yaml'):
-            self._pipeline = Pipeline(file_path)
+            self._pipeline = Pipeline(file_path, main_window=self)
             self._pipeline_config_label.setText(file_path)
         else:
             self._pipeline_config_label.setText('No config file selected')
