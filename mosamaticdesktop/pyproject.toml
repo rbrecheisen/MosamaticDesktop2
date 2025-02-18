@@ -34,7 +34,6 @@ requires = [
     "torch",
     "torchvision",
     "tensorflow==2.15.0",
-#    "tensorflow==2.16.0rc0",
     "opencv-python",
     "scipy",
     "flask",
