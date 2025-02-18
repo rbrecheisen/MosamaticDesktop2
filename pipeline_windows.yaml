@@ -26,8 +26,10 @@ tasks:
     input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\rescaledicomfilestask"
     output_dir_name: "musclefatsegmentationl3task"
     params:
-      model_type: "torch"
-      model_dir: "D:\\Mosamatic\\PyTorchModelFiles"
+      # model_type: "torch"
+      model_type: "tensorflow"
+      # model_dir: "D:\\Mosamatic\\PyTorchModelFiles"
+      model_dir: "D:\\Mosamatic\\TensorFlowModelFiles"
 
   # Creates PNG images for each segmentation
   - class: CreatePngsFromSegmentationsTask

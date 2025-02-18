@@ -72,7 +72,7 @@ class TorchModel:
         # print(f'predict_contour() Elapsed time total: {elapsed_time_total}')
         return mask
 
-    def predict(self, model, image):
+    def predict(self, image, model):
         # start_time_upload_tensor = current_time_in_seconds()
         img1_tensor = torch.tensor(image, dtype=torch.float32).unsqueeze(0).to('cpu')
         # elapsed_time_upload_tensor = elapsed_time_in_seconds(start_time_upload_tensor)

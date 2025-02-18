@@ -9,6 +9,7 @@ from torch.nn import MaxPool2d, Sequential, Conv2d, PReLU, BatchNorm2d, Dropout,
 from models import UNet
 from mosamaticdesktop.tasks.task import Task, TaskStatus
 from mosamaticdesktop.tasks.musclefatsegmentationl3task.torchmodel import TorchModel
+from mosamaticdesktop.tasks.musclefatsegmentationl3task.tensorflowmodel import TensorFlowModel
 from mosamaticdesktop.utils import (
     get_pixels_from_dicom_object, normalize_between, convert_labels_to_157,
     current_time_in_seconds, elapsed_time_in_seconds, load_dicom, LOGGER
@@ -25,7 +26,9 @@ class MuscleFatSegmentationL3Task(Task):
             model, contour_model, params = torch_model.load(model_dir)
             return model, contour_model, params
         elif model_type == 'tensorflow':
-            pass
+            tensorflow_model = TensorFlowModel()
+            model, contour_model, params = tensorflow_model.load(model_dir)
+            return model, contour_model, params
         else:
             pass
         return None
@@ -63,7 +66,9 @@ class MuscleFatSegmentationL3Task(Task):
             mask = torch_model.predict_contour(img, contour_model, params)
             return mask
         elif model_type == 'tensorflow':
-            pass
+            tensorflow_model = TensorFlowModel()
+            mask = tensorflow_model.predict_contour(img, contour_model, params)
+            return mask
         else:
             pass
         return None
@@ -112,9 +117,10 @@ class MuscleFatSegmentationL3Task(Task):
         # print(f'process_file() Elapsed time predict contour: {elapsed_time_predict_contour}')
         if model_type == 'torch':
             torch_model = TorchModel()
-            pred_max = torch_model.predict(model, img1)
+            pred_max = torch_model.predict(img1, model)
         elif model_type == 'tensorflow':
-            pass
+            tensorflow_model = TensorFlowModel()
+            pred_max = tensorflow_model.predict(img1, model)
         else:
             pass
 

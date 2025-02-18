@@ -33,6 +33,7 @@ requires = [
     "pillow",
     "torch",
     "torchvision",
+    "tensorflow==2.15.0",
     "opencv-python",
     "scipy",
     "flask",
