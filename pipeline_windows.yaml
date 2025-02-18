@@ -8,7 +8,8 @@ tasks:
   - class: DecompressDicomFilesTask
     input_dir:
     output_dir_name: "decompressdicomfilestask"
-    params: # Take from pipeline input directory specified at the top
+    params:
+      clean_output: True
 
   # Rescales DICOM files to 512 x 512 if needed. If files do not need to be rescaled
   # this task only copies them to the output directory. If they have been rescaled
@@ -18,6 +19,7 @@ tasks:
     input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\decompressdicomfilestask"
     output_dir_name: "rescaledicomfilestask"
     params:
+      clean_output: True
       target_size: 512
 
   # Extracts muscle and fat regions in CT images at L3. Requires specification of the
@@ -26,6 +28,7 @@ tasks:
     input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\rescaledicomfilestask"
     output_dir_name: "musclefatsegmentationl3task"
     params:
+      clean_output: True
       # model_type: "torch"
       model_type: "tensorflow"
       # model_dir: "D:\\Mosamatic\\PyTorchModelFiles"
@@ -36,6 +39,7 @@ tasks:
     input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\musclefatsegmentationl3task"
     output_dir_name: "createpngsfromsegmentationstask"
     params:
+      clean_output: True
       fig_width: 10
       fig_height: 10
 
@@ -45,5 +49,6 @@ tasks:
     input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\musclefatsegmentationl3task"
     output_dir_name: "calculatemetricstask"
     params:
+      clean_output: True
       image_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\rescaledicomfilestask"
       patient_heights_file: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\patient_heights.csv"

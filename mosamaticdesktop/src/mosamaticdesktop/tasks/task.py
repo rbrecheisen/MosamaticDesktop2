@@ -1,6 +1,7 @@
 import os
 import time
 import json
+import shutil
 
 from pathlib import Path
 from enum import Enum
@@ -30,7 +31,11 @@ class Task(QThread):
         self._output_dir = os.path.join(str(Path(self._input_dir).parent), output_dir_name)
         self._params = params
         self._canceled = False
-        os.makedirs(self._output_dir, exist_ok=True)
+        clean_output = self.get_param('clean_output', False)
+        if clean_output and os.path.exists(self._output_dir):
+            self.log_info(f'Deleting output directory for task {self.__class__.__name__}...')
+            shutil.rmtree(self._output_dir)
+        os.makedirs(self._output_dir, exist_ok=False)
 
     def get_input_dir(self):
         return self._input_dir

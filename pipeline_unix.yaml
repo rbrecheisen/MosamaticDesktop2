@@ -6,29 +6,34 @@ tasks:
     input_dir:
     output_dir_name: "decompressdicomfilestask"
     params:
+      clean_output: True
 
   - class: RescaleDicomFilesTask
     input_dir: "/Users/ralph/Desktop/downloads/mosamaticdesktop/decompressdicomfilestask"
     output_dir_name: "rescaledicomfilestask"
     params:
+      clean_output: True
       target_size: 512
 
-  - class: MuscleFatSegmentationTask
+  - class: MuscleFatSegmentationL3Task
     input_dir: "/Users/ralph/Desktop/downloads/mosamaticdesktop/rescaledicomfilestask"
-    output_dir_name: "musclefatsegmentationtask"
+    output_dir_name: "musclefatsegmentationl3task"
     params:
+      clean_output: True
       model_dir: "/Users/ralph/Desktop/downloads/pytorchmodelfiles"
 
   - class: CreatePngsFromSegmentationsTask
-    input_dir: "/Users/ralph/Desktop/downloads/mosamaticdesktop/musclefatsegmentationtask"
+    input_dir: "/Users/ralph/Desktop/downloads/mosamaticdesktop/musclefatsegmentationl3task"
     output_dir_name: "createpngsfromsegmentationstask"
     params:
+      clean_output: True
       fig_width: 10
       fig_height: 10
 
   - class: CalculateMetricsTask
-    input_dir: "/Users/ralph/Desktop/downloads/mosamaticdesktop/musclefatsegmentationtask"
+    input_dir: "/Users/ralph/Desktop/downloads/mosamaticdesktop/musclefatsegmentationl3task"
     output_dir_name: "calculatemetricstask"
     params:
+      clean_output: True
       image_dir: "/Users/ralph/Desktop/downloads/mosamaticdesktop/rescaledicomfilestask"
       patient_heights_file: "/Users/ralph/Desktop/downloads/mosamaticdesktop/patient_heights.csv"
