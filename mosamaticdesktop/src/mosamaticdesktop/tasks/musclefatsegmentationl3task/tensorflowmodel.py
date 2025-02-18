@@ -3,10 +3,7 @@ import json
 import zipfile
 import numpy as np
 
-from mosamaticdesktop.utils import (
-    get_pixels_from_dicom_object, normalize_between, convert_labels_to_157,
-    current_time_in_seconds, elapsed_time_in_seconds, load_dicom, LOGGER
-)
+from mosamaticdesktop.utils import normalize_between
 
 
 class TensorFlowModel:
@@ -57,7 +54,7 @@ class TensorFlowModel:
     def predict(self, image, model):
         img2 = np.expand_dims(image, 0)
         img2 = np.expand_dims(img2, -1)
-        pred = model.predict([img2]) ##### Move to separate AI class!
+        pred = model.predict([img2])
         pred_squeeze = np.squeeze(pred)
         pred_max = pred_squeeze.argmax(axis=-1)
         return pred_max
