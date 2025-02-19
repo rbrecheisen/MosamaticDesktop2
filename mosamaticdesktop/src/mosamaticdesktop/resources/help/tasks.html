@@ -1,5 +1,6 @@
 <html>
-    <h3>Running individual tasks</h3>
+    <h3>Running individual tasks in a basic workflow</h3>
+
     <p>Mosamatic Desktop 2 is a task-oriented tool. This means that you can run a sequence
     of tasks and have each task's output serve as input to the next task. You start by
     specifying the main input directory. Then you run your first task. This task will 
@@ -12,7 +13,9 @@
     <p>Below we will describe the main workflow for analyzing muscle and fat in CT images
     at the L3 level. Keep this page open while you're going through the steps in the
     tool.</p>
+    
     <h4>1. Specifying the main input directory</h4>
+    
     In the top-level <b>Input</b> panel, click the <b>Select input directory</b> button
     and select the directory containing all your L3 image slices. This directory will
     then appear in the pull-down menu right below this button (see Figure 1).<br>
@@ -20,5 +23,45 @@
     <img src="images/mm_input_directory.png" width="400"><br>
     <i>Figure 1: Specifying main input directory</i><br>
 
-    <h4>2. </h4>
+    <h4>2. Decompress DICOM files</h4>
+
+    DICOM images are often stored with JPEG2000 compression. This is not a problem but Mosamatic
+    Desktop 2 can only process uncompressed images. The <b>DecompressDicomFilesTask</b> task takes
+    care of this. Any images that were not compressed will be copied without modification to the
+    task's output directory.<br>
+    <br>
+    To run the <b>DecompressDicomFilesTask</b>, select it from the
+    pull-down menu in the <b>Tasks</b> panel (see Figure 2). This task will use the previously
+    specified main input directory for its input, i.e., the directory with your L3 images. If you
+    want it to use another input directory, select it in the pull-down menu of the <b>Input</b>
+    panel.<br>
+    <br>
+    <img src="images/mm_decompress_files.png" width="400"><br>
+    <i>Figure 2: Selecting task for decompressing DICOM files and setting its parameters</i><br>
+    <br>
+    After selecting the <b>DecompressDicomFilesTask</b>, click the <b>Set task parameters</b> button.
+    This will allow you to configure the task's parameters (if any). Each task has a <b>Clean output</b>
+    parameter that tells it to delete any existing output directories for the task, if it already
+    exists. By default, the <b>Clean output</b> option is enabled. The <b>DecompressDicomFilesTask</b>
+    does not have any other parameters to just click the <b>Save</b> button. This will enabled the
+    <b>Run task</b> button. Click it to run the task. Based on the number of files in the main input
+    directory, a progress bar will show the task's progress as a percentage (see Figure 3).<br>
+    <br>
+    <img src="images/mm_decompress_progress.png" width="400"><br>
+    <i>Figure 3: Showing progress of task</i><br>
+    <br>
+    When the <b>DecompressDicomFilesTask</b> task has finished, its output directory will be added to
+    the pull-down menu of the <b>Input</b> panel and automatically selected so you can run the next
+    task rightaway.<br>
+
+    <h4>3. Rescale DICOM image to 512 by 512</h4>
+    
+    <p>Mosamatic Desktop 2 can only process DICOM images that are 512 by 512 pixels in size. Sometimes 
+    larger (often wider) images occur, for example, for obese patients that need a larger Field of View
+    (FOV) to capture the full anatomy of the patient. For such images, Mosamatic Desktop 2 can perform
+    a rescaling operation that first adds black space to the image to make it square, and then downscale
+    the image to obtain an image of 512 by 512 pixels. The consequence of this operation is that you may
+    loss a bit of resolution (the anatomy is covered by fewer pixels). The exact impact of this is not 
+    completely known but it won't affect the mean gray values of the rescaled image, only the surface
+    areas of the muscle and fat regions (slightly).</p>
 </html>
