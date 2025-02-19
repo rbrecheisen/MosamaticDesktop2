@@ -1,0 +1,39 @@
+<html>
+    <h3>Preparing your data</h3>
+    <p>The current version of Mosamatic Desktop 2 is designed for analyzing CT images. CT is 
+        still the most common imaging modality for analyzing body composition. Magnetic
+        Resonance (MR) can also be used but takes more time to acquire and is not usually
+        used for this purpose in the clinic.<br>
+        <br>
+        To be able to analyze muscle and fat tissue in CT images, we specify the following
+        requirements:
+        <ul>
+            <li>Images have to be in DICOM format</li>
+            <li>Only the image slice at the 3rd lumbar vertebral level (L3) can be used. If
+                you have a full CT scan, you must select the L3 image slice first. Later 
+                versions of Mosamatic Desktop 2 will support automatic slice selection to
+                alleviate this process.
+            </li>
+            <li>Image size must ideally be 512 by 512. Mosamatic Desktop 2 can rescale the
+                images to 512 by 512 if needed but can lead to slight loss of resolution.
+            </li>
+            <li>Images should ideally have been acquired with contrast during the portal 
+                venous phase (PVP). Other phases, or no contrast, should also work but there
+                may be slight differences in the resulting body composition metrics we 
+                calculate. The conversion formulas for these other phases are linear 
+                and known.
+            </li>
+        </ul>
+        <h4>Manual selection of the L3 image slice in Weasis</h4>
+        Image slice selection can be done in any DICOM viewer but we recommend the open-
+        source tool Weasis. If you open the full scan in Weasis you can scroll to the L3
+        image slice and write down its frame number (usually in the bottom left corner of the
+        view). Then select File > Export > DICOM in the main menu. You will see an
+        overview of all image slices in the scan. Uncheck all images except the one with the
+        frame number you just wrote down. Then click "Export and Close". This will export the
+        selected L3 image slice to file. The image will be stored in several sub-directories
+        and the image file name will be some random piece of text. Rename this file to match
+        the ID of the patient corresponding to this scan, and move the file to another directory
+        so you keep all L3 image slices together. 
+    </p>
+</html>
