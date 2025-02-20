@@ -56,12 +56,80 @@
 
     <h4>3. Rescale DICOM image to 512 by 512</h4>
     
-    <p>Mosamatic Desktop 2 can only process DICOM images that are 512 by 512 pixels in size. Sometimes 
+    Mosamatic Desktop 2 can only process DICOM images that are 512 by 512 pixels in size. Sometimes 
     larger (often wider) images occur, for example, for obese patients that need a larger Field of View
     (FOV) to capture the full anatomy of the patient. For such images, Mosamatic Desktop 2 can perform
     a rescaling operation that first adds black space to the image to make it square, and then downscale
     the image to obtain an image of 512 by 512 pixels. The consequence of this operation is that you may
     lose a bit of resolution (the anatomy is covered by fewer pixels). The exact impact of this is not 
     completely known but it won't affect the mean gray values of the rescaled image, only the surface
-    areas of the muscle and fat regions (slightly).</p>
+    areas of the muscle and fat regions (slightly).<br>
+    <br>
+    The input directory for this task can be selected in the main input panel's pull-down menu.<br>
+    <br>
+    Figure 4 shows selection of the RescaleDicomFilesTask and its parameters. The target size is set to
+    512 by default and should stay that way for Mosamatic Desktop 2.
+    <br>
+    <img src="images/mm_rescale_files.png" width="400"><br>
+    <i>Figure 4: Task selection and parameters for rescaling DICOM files</i><br>
+
+    <h4>4. Automatic annotation of muscle and fat</h4>
+
+    After decompressing and rescaling the L3 images (if needed), you are now ready to run the automatic
+    muscle and fat annotation on the images. Figure 5 shows this task's parameters. The first thing to
+    do is select the model type. This refers to the AI model that you plan to use. By default it is set
+    to "tensorflow". An alternative is "torch" which is an AI model for L3 muscle and fat annotation using
+    a PyTorch-based AI model. This model is still work in progress though and does not give the exact
+    same results as the TensorFlow model so use "tensorflow" for now.<br>
+    <br>
+    The input directory for this task can be selected from the main input panel's pull-down menu and is
+    probably the output directory of the previous task (RescaleDicomFilesTask).<br>
+    <br>
+    <img src="images/mm_muscle_fat_segmentation.png" width="400"><br>
+    <i>Figure 5: Task parameters for muscle and fat annotation</i><br>
+    <br>
+    Annotating muscle and fat in the L3 images will take some time. Please check the progress bar for 
+    indication how far the AI model has progressed. The outputs of this task is a set of NumPy arrays
+    that contain the labels specifying which tissue each pixel belongs to (most likely), i.e., muscle,
+    subcutaneous fat and visceral fat.<br>
+
+    <h4>5. Calculation of body composition metrics</h4>
+
+    After automatically annotating muscle and fat in the L3 images, you will have segmentation outputs
+    that specify the muscle, subcutaneous fat and visceral fat regions. A number of metrics can be calculated
+    for these regions namely:
+    <ul>
+        <li>Muscle area</li>
+        <li>Mean muscle radiation attenutation</li>
+        <li>Subcutaneous fat area</li>
+        <li>Mean subcutaneous fat radiation attenutation</li>
+        <li>Visceral fat area</li>
+        <li>Mean visceral fat radiation attenutation</li>
+    </ul>
+    The area metrics are calculated by taking the area of each pixel (in mm^2) and summing the areas of
+    all pixels inside the area. This is done for muscle, subcutaneous fat and visceral fat separately. The
+    radiation attenutation metrics are calculated by summing the Hounsfield Unit values of all pixels inside the
+    area and dividing by the number of pixels in that area. This is done for muscle, subcutaneous fat
+    and visceral fat.<br>
+    <br>
+    The input directory for this task can be selected from the main input panel's pull-down menu and will 
+    be the output directory of the previous task (MuscleFatSegmentationTask).<br>
+    <br>
+    The parameters for the CalculateMetricsTask are shown in Figure 6. Using the button <b>Open image directory</b>
+    you can select the directory containing the L3 images. This will probably be the output directory of either
+    the DecompressDicomFilesTask or RescaleDicomFilesTask. The input directory for this task should be selected
+    in the main input directory pull-down menu and refer to the output directory of the MuscleFatSegmentationTask.<br>
+    <br>
+    <img src="images/mm_calculate_metrics.png" width="400"><br>
+    <i>Figure 6: Task parameters for calculating body composition metrics</i><br>
+
+    <h4>6. Generating PNG images of muscle and fat segmentations</h4>
+
+    To be able to look at the output of the MuscleFatSegmentationTask, it makes sense to convert these outputs
+    to PNG images for easy viewing. This can be done with the CreatePngsFromSegmentationsTask. It takes the
+    NumPy array objects created with the MuscleFatSegmentationTask and convert these to PNG. In the task 
+    parameters (see Figure 7) you can specify the width and height of the resulting figure.<br>
+    <br>
+    <img src="images/mm_create_pngs.png" width="400"><br>
+    <i>Figure 7: Task parameters for generating PNG images from segmentations</i><br>
 </html>
