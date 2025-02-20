@@ -2,6 +2,7 @@ import os
 import json
 import zipfile
 import numpy as np
+import keras
 
 from mosamaticdesktop.utils import normalize_between
 
@@ -31,6 +32,7 @@ class TensorFlowModel:
                 with zipfile.ZipFile(f_path) as zipObj:
                     zipObj.extractall(path=model_dir_unzipped)
                 model = tf.keras.models.load_model(model_dir_unzipped, compile=False)
+                # model = keras.layers.TFSMLayer(model_dir_unzipped, call_endpoint='serving_default')
             elif f == f'contour_model-{str(model_version)}.zip':
                 if not tfLoaded:
                     import tensorflow as tf # Only load TensorFlow package if necessary (takes some time)
@@ -40,6 +42,7 @@ class TensorFlowModel:
                 with zipfile.ZipFile(f_path) as zipObj:
                     zipObj.extractall(path=contour_model_dir_unzipped)
                 contour_model = tf.keras.models.load_model(contour_model_dir_unzipped, compile=False)
+                # contour_model = keras.layers.TFSMLayer(contour_model_dir_unzipped, call_endpoint='serving_default')
             elif f == f'params-{model_version}.json':
                 with open(f_path, 'r') as f:
                     params = json.load(f)

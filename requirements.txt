@@ -8,8 +8,9 @@ numpy
 pillow
 torch
 torchvision
-tensorflow==2.15.0
+tensorflow==2.16.1
 opencv-python
 scipy
 flask
 pandas
+keras
