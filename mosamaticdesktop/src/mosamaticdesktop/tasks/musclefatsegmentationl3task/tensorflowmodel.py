@@ -2,6 +2,7 @@ import os
 import json
 import zipfile
 import numpy as np
+import keras
 
 from mosamaticdesktop.utils import normalize_between
 
@@ -23,23 +24,31 @@ class TensorFlowModel:
         for f in os.listdir(model_dir):
             f_path = os.path.join(model_dir, f)
             if f == f'model-{str(model_version)}.zip':
-                if not tfLoaded:
-                    import tensorflow as tf # Only load TensorFlow package if necessary (takes some time)
-                    tfLoaded = True
-                model_dir_unzipped = os.path.join(os.path.split(f_path)[0], 'model_unzipped')
-                os.makedirs(model_dir_unzipped, exist_ok=True)
-                with zipfile.ZipFile(f_path) as zipObj:
-                    zipObj.extractall(path=model_dir_unzipped)
-                model = tf.keras.models.load_model(model_dir_unzipped, compile=False)
+                # if not tfLoaded:
+                #     import tensorflow as tf # Only load TensorFlow package if necessary (takes some time)
+                #     tfLoaded = True
+                # model_dir_unzipped = os.path.join(os.path.split(f_path)[0], 'model_unzipped')
+                # os.makedirs(model_dir_unzipped, exist_ok=True)
+                # with zipfile.ZipFile(f_path) as zipObj:
+                #     zipObj.extractall(path=model_dir_unzipped)
+                # model = tf.keras.models.load_model(model_dir_unzipped, compile=False)
+                # model.save('D:\\model_unzipped.keras', save_format='keras')
+                # model = keras.layers.TFSMLayer(model_dir_unzipped, call_endpoint='serving_default')
+                # model = keras.models.load_model('D:\\model_unzipped.keras')
+                model = keras.models.load_model('/Users/ralph/Desktop/downloads/tensorflowmodelfiles/keras/model_unzipped.keras')
             elif f == f'contour_model-{str(model_version)}.zip':
-                if not tfLoaded:
-                    import tensorflow as tf # Only load TensorFlow package if necessary (takes some time)
-                    tfLoaded = True
-                contour_model_dir_unzipped = os.path.join(os.path.split(f_path)[0], 'contour_model_unzipped')
-                os.makedirs(contour_model_dir_unzipped, exist_ok=True)
-                with zipfile.ZipFile(f_path) as zipObj:
-                    zipObj.extractall(path=contour_model_dir_unzipped)
-                contour_model = tf.keras.models.load_model(contour_model_dir_unzipped, compile=False)
+                # if not tfLoaded:
+                #     import tensorflow as tf # Only load TensorFlow package if necessary (takes some time)
+                #     tfLoaded = True
+                # contour_model_dir_unzipped = os.path.join(os.path.split(f_path)[0], 'contour_model_unzipped')
+                # os.makedirs(contour_model_dir_unzipped, exist_ok=True)
+                # with zipfile.ZipFile(f_path) as zipObj:
+                #     zipObj.extractall(path=contour_model_dir_unzipped)
+                # contour_model = tf.keras.models.load_model(contour_model_dir_unzipped, compile=False)
+                # contour_model.save('D:\\contour_model_unzipped.keras', save_format='keras')
+                # contour_model = keras.layers.TFSMLayer(contour_model_dir_unzipped, call_endpoint='serving_default')
+                # contour_model = keras.models.load_model('D:\\contour_model_unzipped.keras')
+                contour_model = keras.models.load_model('/Users/ralph/Desktop/downloads/tensorflowmodelfiles/keras/contour_model_unzipped.keras')
             elif f == f'params-{model_version}.json':
                 with open(f_path, 'r') as f:
                     params = json.load(f)
