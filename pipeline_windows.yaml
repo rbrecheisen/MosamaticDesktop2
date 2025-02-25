@@ -1,5 +1,5 @@
 # Main input directory for pipeline
-input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\input"
+input_dir: "D:\\Mosamatic\\Martijn Broen en Sandra Huijs\\input"
 
 # Tasks to be executed
 tasks:
@@ -16,7 +16,7 @@ tasks:
   # a text file 'rescaled_files.txt' will be created in the output directory listing
   # the file paths.
   - class: RescaleDicomFilesTask
-    input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\decompressdicomfilestask"
+    input_dir: "D:\\Mosamatic\\Martijn Broen en Sandra Huijs\\decompressdicomfilestask"
     output_dir_name: "rescaledicomfilestask"
     params:
       clean_output: True
@@ -25,7 +25,7 @@ tasks:
   # Extracts muscle and fat regions in CT images at L3. Requires specification of the
   # directory containing the PyTorch model files.
   - class: MuscleFatSegmentationL3Task
-    input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\rescaledicomfilestask"
+    input_dir: "D:\\Mosamatic\\Martijn Broen en Sandra Huijs\\rescaledicomfilestask"
     output_dir_name: "musclefatsegmentationl3task"
     params:
       clean_output: True
@@ -37,7 +37,7 @@ tasks:
 
   # Creates PNG images for each segmentation
   - class: CreatePngsFromSegmentationsTask
-    input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\musclefatsegmentationl3task"
+    input_dir: "D:\\Mosamatic\\Martijn Broen en Sandra Huijs\\musclefatsegmentationl3task"
     output_dir_name: "createpngsfromsegmentationstask"
     params:
       clean_output: True
@@ -47,10 +47,10 @@ tasks:
   # Calculate body composition metrics for each DICOM file and segmentation. Optionally,
   # you can provide a CSV file patient heights (two columns: "file" and "height" in meters)
   - class: CalculateMetricsTask
-    input_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\musclefatsegmentationl3task"
+    input_dir: "D:\\Mosamatic\\Martijn Broen en Sandra Huijs\\musclefatsegmentationl3task"
     output_dir_name: "calculatemetricstask"
     params:
       clean_output: True
-      image_dir: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\rescaledicomfilestask"
+      image_dir: "D:\\Mosamatic\\Martijn Broen en Sandra Huijs\\rescaledicomfilestask"
       # patient_heights_file: "D:\\Mosamatic\\Mosamatic Desktop 2.0\\patient_heights.csv"
       patient_heights_file:
