@@ -35,6 +35,7 @@ class Task(QThread):
         if clean_output and os.path.exists(self._output_dir):
             self.log_info(f'Deleting output directory for task {self.__class__.__name__}...')
             shutil.rmtree(self._output_dir)
+            self.log_info('Done')
         os.makedirs(self._output_dir, exist_ok=False)
 
     def get_input_dir(self):

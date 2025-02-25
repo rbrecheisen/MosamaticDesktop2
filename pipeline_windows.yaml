@@ -22,35 +22,35 @@ tasks:
       clean_output: True
       target_size: 512
 
-  # Extracts muscle and fat regions in CT images at L3. Requires specification of the
-  # directory containing the PyTorch model files.
-  - class: MuscleFatSegmentationL3Task
-    input_dir: "L:\\FHML_SURGERY\\AImodel\\T4\\CTC_Physio\\\\rescaledicomfilestask"
-    output_dir_name: "musclefatsegmentationl3task"
-    params:
-      clean_output: True
-      # model_type: "torch"
-      model_type: "tensorflow"
-      model_version: 1.0
-      # model_dir: "D:\\Mosamatic\\PyTorchModelFiles"
-      model_dir: "D:\\Mosamatic\\TensorFlowModelFiles"
+  # # Extracts muscle and fat regions in CT images at L3. Requires specification of the
+  # # directory containing the PyTorch model files.
+  # - class: MuscleFatSegmentationL3Task
+  #   input_dir: "L:\\FHML_SURGERY\\AImodel\\T4\\CTC_Physio\\\\rescaledicomfilestask"
+  #   output_dir_name: "musclefatsegmentationl3task"
+  #   params:
+  #     clean_output: True
+  #     # model_type: "torch"
+  #     model_type: "tensorflow"
+  #     model_version: 1.0
+  #     # model_dir: "D:\\Mosamatic\\PyTorchModelFiles"
+  #     model_dir: "D:\\Mosamatic\\TensorFlowModelFiles"
 
-  # Creates PNG images for each segmentation
-  - class: CreatePngsFromSegmentationsTask
-    input_dir: "L:\\FHML_SURGERY\\AImodel\\T4\\CTC_Physio\\\\musclefatsegmentationl3task"
-    output_dir_name: "createpngsfromsegmentationstask"
-    params:
-      clean_output: True
-      fig_width: 10
-      fig_height: 10
+  # # Creates PNG images for each segmentation
+  # - class: CreatePngsFromSegmentationsTask
+  #   input_dir: "L:\\FHML_SURGERY\\AImodel\\T4\\CTC_Physio\\\\musclefatsegmentationl3task"
+  #   output_dir_name: "createpngsfromsegmentationstask"
+  #   params:
+  #     clean_output: True
+  #     fig_width: 10
+  #     fig_height: 10
 
-  # Calculate body composition metrics for each DICOM file and segmentation. Optionally,
-  # you can provide a CSV file patient heights (two columns: "file" and "height" in meters)
-  - class: CalculateMetricsTask
-    input_dir: "L:\\FHML_SURGERY\\AImodel\\T4\\CTC_Physio\\\\musclefatsegmentationl3task"
-    output_dir_name: "calculatemetricstask"
-    params:
-      clean_output: True
-      image_dir: "L:\\FHML_SURGERY\\AImodel\\T4\\CTC_Physio\\\\rescaledicomfilestask"
-      # patient_heights_file:
-      patient_heights_file:
+  # # Calculate body composition metrics for each DICOM file and segmentation. Optionally,
+  # # you can provide a CSV file patient heights (two columns: "file" and "height" in meters)
+  # - class: CalculateMetricsTask
+  #   input_dir: "L:\\FHML_SURGERY\\AImodel\\T4\\CTC_Physio\\\\musclefatsegmentationl3task"
+  #   output_dir_name: "calculatemetricstask"
+  #   params:
+  #     clean_output: True
+  #     image_dir: "L:\\FHML_SURGERY\\AImodel\\T4\\CTC_Physio\\\\rescaledicomfilestask"
+  #     # patient_heights_file:
+  #     patient_heights_file:
