@@ -34,6 +34,9 @@ class RescaleDicomFilesTask(Task):
             p.Rows = target_size
             p.Columns = target_size
             target = os.path.join(output_dir, f_name)
+            # Add "rescaled" annotation in file name
+            file_name = os.path.splitext(target)[0] + '_rescaled.dcm'
+            target = os.path.join(os.path.split(target)[0], file_name)
             p.save_as(target)
             return target
         else:
